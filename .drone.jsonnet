@@ -1,6 +1,6 @@
 local name = 'mattermost';
 local browser = 'chrome';
-local version = '2.11.6';
+local version = '9.11';
 local nginx = '1.24.0';
 local postgresql = "15-bullseye";
 local redis = "7.0.15";
@@ -25,20 +25,6 @@ local build(arch, test_ui, dind) = [{
         'echo $DRONE_BUILD_NUMBER > version',
       ],
     },
-             {
-                name: "redis",
-                image: "redis:" + redis,
-                commands: [
-                    "./redis/build.sh"
-                ]
-            },
-             {
-                name: "redis test",
-                image: 'syncloud/platform-buster-' + arch + ':' + platform,
-                commands: [
-                    "./redis/test.sh"
-                ]
-            },
   {
             name: "postgresql",
             image: "postgres:" + postgresql,
@@ -57,7 +43,7 @@ local build(arch, test_ui, dind) = [{
 
     {
       name: 'mattermost',
-      image: "ghcr.io/mattermost-ngx/mattermost-ngx:" + version,
+      image: "mattermost/mattermost-enterprise-edition:release-" + version,
       commands: [
         './mattermost/build.sh',
       ],
