@@ -3,6 +3,7 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd ${DIR}
 BUILD_DIR=${DIR}/../build/snap/mattermost
+whoami
 mkdir -p ${BUILD_DIR}
 cp -r /bin ${BUILD_DIR}
 cp -r /usr ${BUILD_DIR}
