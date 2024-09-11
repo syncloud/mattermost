@@ -44,6 +44,7 @@ local build(arch, test_ui, dind) = [{
     {
       name: 'mattermost',
       image: "mattermost/mattermost-enterprise-edition:release-" + version,
+      user: "root",
       commands: [
         './mattermost/build.sh',
       ],
