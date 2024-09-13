@@ -103,11 +103,6 @@ func (i *Installer) Configure() error {
 		return err
 	}
 
-	err = i.executor.Run(fmt.Sprint(i.appDir, "/bin/configure.sh"))
-	if err != nil {
-		return err
-	}
-
 	err = i.FixPermissions()
 	if err != nil {
 		return err
@@ -216,12 +211,7 @@ func (i *Installer) StorageChange() error {
 		return err
 	}
 	err = linux.CreateMissingDirs(
-		path.Join(storageDir, "data/log"),
-		path.Join(storageDir, "data/index"),
-		path.Join(storageDir, "consume"),
-		path.Join(storageDir, "media"),
-		path.Join(storageDir, "static"),
-		path.Join(storageDir, "trash"),
+		path.Join(storageDir, "tmp"),
 	)
 	if err != nil {
 		return err
