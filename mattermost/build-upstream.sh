@@ -13,9 +13,3 @@ make setup-go-work
 make build-linux BUILD_NUMBER='syncloud'
 cp bin/mattermost ${BUILD_DIR}/mattermost/bin/
 
-cp -r /lib ${BUILD_DIR}
-cp -r /mattermost ${BUILD_DIR}
-cp --remove-destination -R ${DIR}/bin ${BUILD_DIR}/sbin
-
-
-
