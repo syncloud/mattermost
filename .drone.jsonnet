@@ -51,7 +51,7 @@ local build(arch, test_ui, dind) = [{
     },
   {
       name: 'mattermost-upstream',
-      image: "golang:1.20",
+      image: "golang:1.23",
       commands: [
         './mattermost/build-upstream.sh',
       ],
