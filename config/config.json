@@ -1,9 +1,9 @@
 {
   "ServiceSettings": {
-    "SiteURL": "",
+    "SiteURL": "{{ .AppUrl }}",
     "WebsocketURL": "",
     "LicenseFileLocation": "",
-    "ListenAddress": ":8065",
+    "ListenAddress": "{{ .CommonDir }}/web.socket",
     "ConnectionSecurity": "",
     "TLSCertFile": "",
     "TLSKeyFile": "",
@@ -166,7 +166,7 @@
     "ConsoleLevel": "INFO",
     "ConsoleJson": true,
     "EnableColor": false,
-    "EnableFile": true,
+    "EnableFile": false,
     "FileLevel": "INFO",
     "FileJson": true,
     "FileLocation": "",
@@ -194,7 +194,7 @@
     "ConsoleLevel": "INFO",
     "ConsoleJson": true,
     "EnableColor": false,
-    "EnableFile": true,
+    "EnableFile": false,
     "FileLevel": "INFO",
     "FileJson": true,
     "FileLocation": "",
@@ -217,7 +217,7 @@
     "MaxImageResolution": 33177600,
     "MaxImageDecoderConcurrency": -1,
     "DriverName": "local",
-    "Directory": "./data/",
+    "Directory": "/data/mattermost/data",
     "EnablePublicLink": false,
     "ExtractContent": true,
     "ArchiveRecursion": false,
@@ -237,7 +237,7 @@
     "AmazonS3UploadPartSizeBytes": 5242880,
     "DedicatedExportStore": false,
     "ExportDriverName": "local",
-    "ExportDirectory": "./data/",
+    "ExportDirectory": "/data/mattermost/data",
     "ExportAmazonS3AccessKeyId": "",
     "ExportAmazonS3SecretAccessKey": "",
     "ExportAmazonS3Bucket": "",
@@ -581,8 +581,8 @@
     "EnableUploads": false,
     "AllowInsecureDownloadURL": false,
     "EnableHealthCheck": true,
-    "Directory": "./plugins",
-    "ClientDirectory": "./client/plugins",
+    "Directory": "{{ .AppDir }}/plugins",
+    "ClientDirectory": "{{ .AppDir }}/client/plugins",
     "Plugins": {},
     "PluginStates": {
       "com.mattermost.calls": {
@@ -651,11 +651,11 @@
     "ExperimentalAuditSettingsSystemConsoleUI": false
   },
   "ImportSettings": {
-    "Directory": "./import",
+    "Directory": "/data/mattermost/import",
     "RetentionDays": 30
   },
   "ExportSettings": {
-    "Directory": "./export",
+    "Directory": "/data/mattermost/export",
     "RetentionDays": 30
   },
   "WranglerSettings": {
