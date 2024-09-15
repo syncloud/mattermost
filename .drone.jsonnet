@@ -49,6 +49,13 @@ local build(arch, test_ui, dind) = [{
         './mattermost/build.sh',
       ],
     },
+  {
+      name: 'mattermost',
+      image: "golang:1.20",
+      commands: [
+        './mattermost/build-upstream.sh',
+      ],
+    },
     {
       name: 'mattermost test',
       image: 'syncloud/platform-buster-' + arch + ':' + platform,
