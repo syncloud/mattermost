@@ -50,7 +50,7 @@ local build(arch, test_ui, dind) = [{
       ],
     },
   {
-      name: 'mattermost',
+      name: 'mattermost-upstream',
       image: "golang:1.20",
       commands: [
         './mattermost/build-upstream.sh',
