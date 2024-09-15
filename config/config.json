@@ -1,6 +1,6 @@
 {
   "ServiceSettings": {
-    "SiteURL": "{{ .AppUrl }}",
+    "SiteURL": "{{ .Url }}",
     "WebsocketURL": "",
     "LicenseFileLocation": "",
     "ListenAddress": "{{ .CommonDir }}/web.socket",
