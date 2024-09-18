@@ -375,7 +375,7 @@
     "ButtonColor": "#145DBF"
   },
   "LdapSettings": {
-    "Enable": false,
+    "Enable": true,
     "EnableSync": false,
     "LdapServer": "",
     "LdapPort": 389,
@@ -668,3 +668,4 @@
     "MoveThreadFromGroupMessageChannelEnable": false
   }
 }
+
