@@ -581,8 +581,8 @@
     "EnableUploads": false,
     "AllowInsecureDownloadURL": false,
     "EnableHealthCheck": true,
-    "Directory": "{{ .AppDir }}/plugins",
-    "ClientDirectory": "{{ .AppDir }}/client/plugins",
+    "Directory": "{{ .DataDir }}/plugins",
+    "ClientDirectory": "{{ .DataDir }}/client/plugins",
     "Plugins": {},
     "PluginStates": {
       "com.mattermost.calls": {
