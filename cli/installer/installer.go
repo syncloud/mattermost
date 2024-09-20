@@ -212,6 +212,8 @@ func (i *Installer) StorageChange() error {
 	}
 	err = linux.CreateMissingDirs(
 		path.Join(storageDir, "tmp"),
+		path.Join(i.dataDir, "plugins"),
+		path.Join(i.dataDir, "client/plugins"),
 	)
 	if err != nil {
 		return err
