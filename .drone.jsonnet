@@ -40,7 +40,7 @@ local build(arch, test_ui, dind) = [{
                 "./postgresql/test.sh"
             ]
         },
-
+/*
     {
       name: 'mattermost',
       image: "mattermost/mattermost-enterprise-edition:release-" + version,
@@ -49,11 +49,19 @@ local build(arch, test_ui, dind) = [{
         './mattermost/build.sh',
       ],
     },
+*/
   {
-      name: 'mattermost-upstream',
+      name: 'mattermost-server',
       image: "golang:1.23",
       commands: [
-        './mattermost/build-upstream.sh',
+        './mattermost/build-server.sh',
+      ],
+    },
+  {
+      name: 'mattermost-web',
+      image: "node:20.9.0",
+      commands: [
+        './mattermost/build-web.sh',
       ],
     },
     {

@@ -11,5 +11,8 @@ tar xf syncloud.tar.gz
 cd mattermost-syncloud/server
 make setup-go-work
 make build-linux BUILD_NUMBER='syncloud'
-cp bin/mattermost ${BUILD_DIR}/mattermost/bin/
-
+mkdir ${BUILD_DIR}/mattermost/bin
+cp bin/mattermost ${BUILD_DIR}/mattermost/bin
+cp bin/mmctl ${BUILD_DIR}/mattermost/bin
+cp -r fonts ${BUILD_DIR}/mattermost
+cp -r i18n ${BUILD_DIR}/mattermost
