@@ -117,7 +117,7 @@
     "SiteName": "Mattermost",
     "MaxUsersPerTeam": 50,
     "EnableJoinLeaveMessageByDefault": true,
-    "EnableUserCreation": true,
+    "EnableUserCreation": false,
     "EnableOpenServer": false,
     "EnableUserDeactivation": false,
     "RestrictCreationToDomains": "",
@@ -253,7 +253,7 @@
     "ExportAmazonS3UploadPartSizeBytes": 104857600
   },
   "EmailSettings": {
-    "EnableSignUpWithEmail": true,
+    "EnableSignUpWithEmail": false,
     "EnableSignInWithEmail": true,
     "EnableSignInWithUsername": true,
     "SendEmailNotifications": false,
