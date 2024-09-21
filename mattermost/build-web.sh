@@ -12,6 +12,8 @@ cd ..
 cp -r templates ${BUILD_DIR}/mattermost
 
 cd ${DIR}/mattermost-syncloud/webapp
+npm config set fetch-retry-mintimeout 200000
+npm config set fetch-retry-maxtimeout 1200000
 npm i
 npm run build
 ls -la
