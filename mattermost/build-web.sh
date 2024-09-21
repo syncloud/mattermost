@@ -16,5 +16,10 @@ npm config set fetch-retry-mintimeout 200000
 npm config set fetch-retry-maxtimeout 1200000
 npm i
 npm run build
+
 ls -la
-mv dist ${BUILD_DIR}/mattermost/client
+ls -la platform/client
+ls -la platform/components
+ls -la platform/types
+
+mv platform/client/dist ${BUILD_DIR}/mattermost/client
