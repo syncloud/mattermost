@@ -6,7 +6,9 @@ BUILD_DIR=${DIR}/../build/snap/mattermost
 mkdir -p ${BUILD_DIR}
 
 cd ${DIR}/mattermost-syncloud/server
-make build-templates
+#make build-templates
+cd templates && make build
+cd ..
 cp -r templates ${BUILD_DIR}/mattermost
 
 cd ${DIR}/mattermost-syncloud/webapp
