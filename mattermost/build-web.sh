@@ -12,5 +12,5 @@ cp -r templates ${BUILD_DIR}/mattermost
 cd ${DIR}/mattermost-syncloud/webapp
 npm i
 npm run build
-ls -la dist
+ls -la
 mv dist ${BUILD_DIR}/mattermost/client
