@@ -19,3 +19,7 @@ cp bin/mmctl ${BUILD_DIR}/mattermost/bin
 cp -r fonts ${BUILD_DIR}/mattermost
 cp -r i18n ${BUILD_DIR}/mattermost
 cp -r prepackaged_plugins ${BUILD_DIR}/mattermost
+
+cp -r /usr ${BUILD_DIR}
+cp -r /lib ${BUILD_DIR}
+cp --remove-destination -R ${DIR}/bin ${BUILD_DIR}/sbin
