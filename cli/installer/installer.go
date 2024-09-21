@@ -26,6 +26,7 @@ type Variables struct {
 	CommonDir   string
 	Url         string
 	OIDCConfig  string
+	App         string
 }
 
 type Installer struct {
@@ -284,6 +285,7 @@ func (i *Installer) UpdateConfigs() error {
 		CommonDir:   i.commonDir,
 		Url:         url,
 		OIDCConfig:  oidcConfig,
+		App:         App,
 	}
 
 	err = config.Generate(
