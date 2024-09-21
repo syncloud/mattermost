@@ -21,5 +21,6 @@ ls -la
 ls -la platform/client
 ls -la platform/components
 ls -la platform/types
+ls -la channels
 
-mv platform/client/dist ${BUILD_DIR}/mattermost/client
+mv platform/dist ${BUILD_DIR}/mattermost/client
