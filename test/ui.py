@@ -39,9 +39,9 @@ def test_login(selenium, device_user, device_password):
     password.send_keys(device_password)
     selenium.screenshot('login')
     #password.send_keys(Keys.RETURN)
-    selenium.find_by(By.ID, "sign-in-button").click()
-    selenium.find_by(By.ID, "accept-button").click()
-    selenium.find_by(By.XPATH, "//button[contains(.,'Sign up')]").click()
+    #selenium.find_by(By.ID, "sign-in-button").click()
+    #selenium.find_by(By.ID, "accept-button").click()
+    selenium.find_by(By.XPATH, "//a[contains(.,'Log in')]").click()
     selenium.find_by(By.XPATH, "//h4[contains(.,'Paperless-ngx is running!')]")
     selenium.screenshot('main')
 
