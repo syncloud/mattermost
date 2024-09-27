@@ -59,7 +59,7 @@ local build(arch, test_ui, dind) = [{
     },
   {
       name: 'mattermost-web',
-      image: "node:" + node,
+      image: "node:20.9.0",
       commands: [
         './mattermost/build-web.sh',
       ],
