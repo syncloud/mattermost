@@ -1,9 +1,8 @@
 local name = 'mattermost';
 local browser = 'chrome';
-local version = '9.11';
+local version = '10.3.1';
 local nginx = '1.24.0';
 local postgresql = "15-bullseye";
-local redis = "7.0.15";
 local node = "18-bookworm-slim";
 local platform = '22.02';
 local selenium = '4.21.0-20240517';
@@ -50,6 +49,19 @@ local build(arch, test_ui, dind) = [{
       ],
     },
 */
+{
+            name: "mattermost-web-docker",
+            image: "docker:" + dind,
+                commands: [
+                "./mattermost/build-web-docker.sh " + version
+            ],
+            volumes: [
+                {
+                    name: "dockersock",
+                    path: "/var/run"
+                }
+            ]
+        },
   {
       name: 'mattermost-server',
       image: "golang:1.23",
@@ -57,6 +69,7 @@ local build(arch, test_ui, dind) = [{
         './mattermost/build-server.sh',
       ],
     },
+/*
   {
       name: 'mattermost-web',
       image: "node:20.9.0",
@@ -64,6 +77,7 @@ local build(arch, test_ui, dind) = [{
         './mattermost/build-web.sh',
       ],
     },
+*/
     {
       name: 'mattermost test',
       image: 'syncloud/platform-buster-' + arch + ':' + platform,
