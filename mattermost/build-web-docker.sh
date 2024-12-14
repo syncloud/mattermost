@@ -13,4 +13,4 @@ cd ${DIR}/../build
 docker export app -o app.tar
 tar xf app.tar
 rm -rf app.tar
-cp -R mattermost/mattermost/client ${BUILD_DIR}/
+cp -R mattermost/client ${BUILD_DIR}/
