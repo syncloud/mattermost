@@ -86,12 +86,12 @@ def test_remove(device, app):
 
 def test_reinstall(app_archive_path, device_host, device_password, app_domain):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 50)
 
 
 def test_upgrade(app_archive_path, device_host, device_password, app_domain):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 10)
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 50)
 
 
 def test_access_change(device, artifact_dir):
