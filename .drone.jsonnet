@@ -48,7 +48,7 @@ local build(arch, test_ui, dind) = [{
         './mattermost/build.sh',
       ],
     },
-*/
+
 {
             name: "mattermost-web-docker",
             image: "docker:" + dind,
@@ -62,6 +62,7 @@ local build(arch, test_ui, dind) = [{
                 }
             ]
         },
+*/
   {
       name: 'mattermost-server',
       image: "golang:1.23",
@@ -69,7 +70,7 @@ local build(arch, test_ui, dind) = [{
         './mattermost/build-server.sh',
       ],
     },
-/*
+
   {
       name: 'mattermost-web',
       image: "node:20.9.0",
@@ -77,7 +78,7 @@ local build(arch, test_ui, dind) = [{
         './mattermost/build-web.sh',
       ],
     },
-*/
+
     {
       name: 'mattermost test',
       image: 'syncloud/platform-buster-' + arch + ':' + platform,
@@ -315,6 +316,6 @@ local build(arch, test_ui, dind) = [{
   ],
 }];
 
-build('amd64', true, '20.10.21-dind') +
-build('arm64', false, '20.10.21-dind')
+build('amd64', true, '20.10.21-dind') //+
+//build('arm64', false, '20.10.21-dind')
 
