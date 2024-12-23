@@ -66,7 +66,6 @@ def test_ca_cert(device, app_domain):
 
 
 def test_install(app_archive_path, device_host, device_password, device, app_domain):
-    exit
     device.run_ssh('touch /var/snap/platform/current/CI_TEST')
     local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 50)
@@ -125,5 +124,3 @@ def retry(method, retries=10):
             time.sleep(5)
         attempt += 1
     raise exception
-
-
