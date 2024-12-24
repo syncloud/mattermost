@@ -49,7 +49,7 @@ def module_setup(request, device, app_dir, artifact_dir):
     request.addfinalizer(module_teardown)
 
 
-def test_start(device, device_host, app, domain):
+def test_start(module_setup, device, device_host, app, domain):
     add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=10)
     device.run_ssh('mkdir {0}'.format(TMP_DIR))
