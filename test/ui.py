@@ -55,5 +55,9 @@ def test_login(selenium, device_user, device_password):
     selenium.screenshot('invite')
     selenium.click_by(By.XPATH, "//span[.='Finish setup']")
 
+    selenium.find_by(By.XPATH, "//span[.='Visible to Admins only']")
+    selenium.screenshot('welcome')
+    selenium.click_by(By.XPATH, "//span[.='Close']")
+
     selenium.find_by(By.XPATH, "//div[.='message']")
     selenium.screenshot('main')
