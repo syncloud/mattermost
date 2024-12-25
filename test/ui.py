@@ -45,10 +45,15 @@ def test_login(selenium, device_user, device_password):
     selenium.find_by(By.XPATH, "//input[@placeholder='Organization name']").send_keys("testorg")
     selenium.screenshot('org')
     selenium.click_by(By.XPATH, "//span[.='Continue']")
+
     selenium.find_by(By.XPATH, "//span[.='What tools do you use?']")
     selenium.find_by(By.XPATH, "//span[.='Skip']")
     selenium.screenshot('tools')
     selenium.click_by(By.XPATH, "//span[.='Continue']")
+
+    selenium.find_by(By.XPATH, "//span[.='Invite your team members']")
+    selenium.screenshot('invite')
     selenium.click_by(By.XPATH, "//span[.='Finish setup']")
+
     selenium.find_by(By.XPATH, "//div[.='message']")
     selenium.screenshot('main')
