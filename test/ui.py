@@ -50,4 +50,5 @@ def test_login(selenium, device_user, device_password):
     selenium.screenshot('tools')
     selenium.click_by(By.XPATH, "//span[.='Continue']")
     selenium.find_by(By.XPATH, "//div[.='message']")
+    selenium.click_by(By.XPATH, "//span[.='Finish setup']")
     selenium.screenshot('main')
