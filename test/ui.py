@@ -58,9 +58,12 @@ def test_login(selenium, device_user, device_password):
     selenium.find_by(By.XPATH, "//span[.='Visible to Admins only']")
     selenium.screenshot('welcome')
     selenium.click_by(By.XPATH, "//button[@class='close']")
+    selenium.invisible_by(By.XPATH, "//span[.='Visible to Admins only']")
+    selenium.screenshot('chat')
 
-    selenium.find_by(By.XPATH, "//textarea[@id='post_textbox']").send_keys("test message")
+def test_message(selenium):
+
+    selenium.clickable_by(By.XPATH, "//textarea[@id='post_textbox']").send_keys("test message")
     selenium.click_by(By.XPATH, "//button[@data-testid='SendMessageButton']")
-
     selenium.find_by(By.XPATH, "//div[@class='post-message__text' and .='test message']")
     selenium.screenshot('message')
