@@ -39,43 +39,11 @@ local build(arch, test_ui, dind) = [{
                 "./postgresql/test.sh"
             ]
         },
-/*
     {
       name: 'mattermost',
-      image: "mattermost/mattermost-enterprise-edition:release-" + version,
-      user: "root",
+      image: 'debian:buster-slim',
       commands: [
-        './mattermost/build.sh',
-      ],
-    },
-
-{
-            name: "mattermost-web-docker",
-            image: "docker:" + dind,
-                commands: [
-                "./mattermost/build-web-docker.sh " + version
-            ],
-            volumes: [
-                {
-                    name: "dockersock",
-                    path: "/var/run"
-                }
-            ]
-        },
-*/
-  {
-      name: 'mattermost-server',
-      image: "golang:1.23",
-      commands: [
-        './mattermost/build-server.sh',
-      ],
-    },
-
-  {
-      name: 'mattermost-web',
-      image: "node:20.9.0",
-      commands: [
-        './mattermost/build-web.sh',
+        './mattermost/download.sh ' + arch + ' 1',
       ],
     },
 
@@ -316,6 +284,6 @@ local build(arch, test_ui, dind) = [{
   ],
 }];
 
-build('amd64', true, '20.10.21-dind') //+
-//build('arm64', false, '20.10.21-dind')
+build('amd64', true, '20.10.21-dind') +
+build('arm64', false, '20.10.21-dind')
 
