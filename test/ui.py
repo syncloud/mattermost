@@ -62,5 +62,5 @@ def test_login(selenium, device_user, device_password):
     selenium.find_by(By.XPATH, "//textarea[@id='post_textbox']").send_keys("test message")
     selenium.click_by(By.XPATH, "//button[@data-testid='SendMessageButton']")
 
-    selenium.find_by(By.XPATH, "//div[@class="post-message__text' and .='test message']")
+    selenium.find_by(By.XPATH, "//div[@class='post-message__text' and .='test message']")
     selenium.screenshot('message')
