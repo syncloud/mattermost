@@ -43,7 +43,7 @@ local build(arch, test_ui, dind) = [{
       name: 'mattermost',
       image: 'debian:buster-slim',
       commands: [
-        './mattermost/download.sh ' + arch + ' 1',
+        './mattermost/download.sh ' + arch + ' syncloud-3',
       ],
     },
 
