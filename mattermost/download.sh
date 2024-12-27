@@ -18,13 +18,14 @@ wget --progress=dot:giga https://github.com/cyberb/mattermost/releases/download/
 tar xf server.tar.gz
 cd ..
 mv mattermost ${BUILD_DIR}/mattermost
-rm -rf mattermost
 
-mkdir mattermost
+
+mkdir web
+cd web
 wget --progress=dot:giga https://github.com/cyberb/mattermost/releases/download/$VERSION/web-$VERSION.tar.gz -O web.tar.gz
 tar xf web.tar.gz
 mv client ${BUILD_DIR}/mattermost
 cd ..
-rm -rf mattermost
+rm -rf web
 
 cp --remove-destination -R ${DIR}/bin ${BUILD_DIR}/sbin
