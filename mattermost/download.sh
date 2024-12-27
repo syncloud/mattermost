@@ -17,14 +17,14 @@ cd mattermost
 wget --progress=dot:giga https://github.com/cyberb/mattermost/releases/download/$VERSION/server-$ARCH-$VERSION.tar.gz -O server.tar.gz
 tar xf server.tar.gz
 cd ..
-mv mattermost ${BUILD_DIR}/mattermost
+mv mattermost/* ${BUILD_DIR}
 
 
 mkdir web
 cd web
 wget --progress=dot:giga https://github.com/cyberb/mattermost/releases/download/$VERSION/web-$VERSION.tar.gz -O web.tar.gz
 tar xf web.tar.gz
-mv client ${BUILD_DIR}/mattermost
+mv client ${BUILD_DIR}
 cd ..
 rm -rf web
 
