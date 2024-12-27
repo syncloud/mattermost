@@ -8,6 +8,9 @@ mkdir -p ${BUILD_DIR}
 ARCH=$1
 VERSION=$2
 
+apt update
+apt -y install wget
+
 cd ${DIR}/../build
 mkdir mattermost
 cd mattermost
