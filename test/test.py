@@ -60,7 +60,7 @@ def test_start(module_setup, device, device_host, app, domain):
 
 @pytest.mark.flaky(retries=3, delay=1)
 def test_activate_device(device):
-    response = device.activate_custom
+    response = device.activate_custom()
     assert response.status_code == 200, response.text
     
 
