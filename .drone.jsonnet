@@ -7,6 +7,7 @@ local node = "18-bookworm-slim";
 local platform = '22.02';
 local selenium = '4.21.0-20240517';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
+local mattermost = 'syncloud-3';
 
 local build(arch, test_ui, dind) = [{
   kind: 'pipeline',
@@ -43,7 +44,7 @@ local build(arch, test_ui, dind) = [{
       name: 'mattermost',
       image: 'debian:buster-slim',
       commands: [
-        './mattermost/download.sh ' + arch + ' syncloud-3',
+        './mattermost/download.sh ' + arch + ' ' + mattermost,
       ],
     },
 

@@ -42,7 +42,6 @@ def module_setup(request, device, app_dir, artifact_dir):
 
         app_log_dir = join(artifact_dir, 'log')
         os.mkdir(app_log_dir)
-        device.scp_from_device('/var/snap/mattermost/common/log/*.log', app_log_dir)
         device.scp_from_device('{0}/*'.format(TMP_DIR), app_log_dir)
         check_output('chmod -R a+r {0}'.format(artifact_dir), shell=True)
 
@@ -55,9 +54,13 @@ def test_start(module_setup, device, device_host, app, domain):
     device.run_ssh('mkdir {0}'.format(TMP_DIR))
   
 
+# def test_refresh_platform(device):
+#     device.run_ssh('snap refresh platform --channel=master')
+
+
+@pytest.mark.flaky(retries=3, delay=1)
 def test_activate_device(device):
-    device.run_ssh('snap refresh platform --channel=master')
-    response = retry(device.activate_custom)
+    response = device.activate_custom
     assert response.status_code == 200, response.text
     
 
@@ -71,11 +74,11 @@ def test_install(app_archive_path, device_host, device_password, device, app_dom
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 50)
 
 
-def test_storage_change_event(device):
+def test_storage_change(device):
     device.run_ssh('snap run mattermost.storage-change > {0}/storage-change.log'.format(TMP_DIR))
 
 
-def test_access_change_event(device):
+def test_access_change(device):
     device.run_ssh('snap run mattermost.access-change > {0}/access-change.log'.format(TMP_DIR))
 
 
@@ -94,7 +97,8 @@ def test_upgrade(app_archive_path, device_host, device_password, app_domain):
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 50)
 
 
-def test_access_change(device, artifact_dir):
+@pytest.mark.flaky(retries=3, delay=1)
+def test_access_change_after_upgrade(device):
     device.run_ssh("snap run mattermost.access-change")
 
 
@@ -108,19 +112,5 @@ def test_backup(device, artifact_dir):
     device.run_ssh("snap run platform.cli backup restore {0}".format(backup['file']))
 
 
-# def test_sql(device, artifact_dir):
-#    device.run_ssh("snap run mattermost.psql -U mattermost -d mattermost -c 'select * from Configurations'", retries=10)
-
-
-def retry(method, retries=10):
-    attempt = 0
-    exception = None
-    while attempt < retries:
-        try:
-            return method()
-        except Exception as e:
-            exception = e
-            print('error (attempt {0}/{1}): {2}'.format(attempt + 1, retries, str(e)))
-            time.sleep(5)
-        attempt += 1
-    raise exception
+def test_sql(device):
+   device.run_ssh("snap run mattermost.psql -U mattermost -d mattermost -c 'select * from users'", retries=10)
