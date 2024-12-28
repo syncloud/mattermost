@@ -7,6 +7,8 @@ local node = "18-bookworm-slim";
 local platform = '22.02';
 local selenium = '4.21.0-20240517';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
+local mattermost = 'syncloud-3';
+local python = '3.9-slim-buster';
 
 local build(arch, test_ui, dind) = [{
   kind: 'pipeline',
@@ -39,45 +41,14 @@ local build(arch, test_ui, dind) = [{
                 "./postgresql/test.sh"
             ]
         },
-/*
     {
       name: 'mattermost',
-      image: "mattermost/mattermost-enterprise-edition:release-" + version,
-      user: "root",
+      image: 'debian:buster-slim',
       commands: [
-        './mattermost/build.sh',
+        './mattermost/download.sh ' + arch + ' ' + mattermost,
       ],
     },
-*/
-{
-            name: "mattermost-web-docker",
-            image: "docker:" + dind,
-                commands: [
-                "./mattermost/build-web-docker.sh " + version
-            ],
-            volumes: [
-                {
-                    name: "dockersock",
-                    path: "/var/run"
-                }
-            ]
-        },
-  {
-      name: 'mattermost-server',
-      image: "golang:1.23",
-      commands: [
-        './mattermost/build-server.sh',
-      ],
-    },
-/*
-  {
-      name: 'mattermost-web',
-      image: "node:20.9.0",
-      commands: [
-        './mattermost/build-web.sh',
-      ],
-    },
-*/
+
     {
       name: 'mattermost test',
       image: 'syncloud/platform-buster-' + arch + ':' + platform,
@@ -107,12 +78,12 @@ local build(arch, test_ui, dind) = [{
     },
     {
       name: 'test',
-      image: 'python:3.8-slim-buster',
+      image: 'python:' + python,
       commands: [
         'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
         'cd test',
         './deps.sh',
-        'py.test -x -s test.py --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.buster.com --app=' + name + ' --arch=' + arch,
+        'py.test -rA -vvvvv -x -s test.py --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.buster.com --app=' + name + ' --arch=' + arch,
       ],
     },
   ] + (if test_ui then [
@@ -156,7 +127,7 @@ local build(arch, test_ui, dind) = [{
          },
          {
            name: 'test-ui',
-           image: 'python:3.8-slim-buster',
+           image: 'python:' + python,
            commands: [
              'cd test',
              './deps.sh',
@@ -171,7 +142,7 @@ local build(arch, test_ui, dind) = [{
        ] else []) + [
     {
       name: 'test-upgrade',
-      image: 'python:3.8-slim-buster',
+      image: 'python:' + python,
       commands: [
         'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
         'cd test',

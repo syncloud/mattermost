@@ -42,12 +42,28 @@ def test_login(selenium, device_user, device_password):
     #selenium.find_by(By.ID, "sign-in-button").click()
     #selenium.find_by(By.ID, "accept-button").click()
     selenium.find_by(By.XPATH, "//span[contains(.,'Log in')]").click()
-    selenium.find_by(By.XPATH, "//h4[contains(.,'Paperless-ngx is running!')]")
-    selenium.screenshot('main')
+    selenium.find_by(By.XPATH, "//input[@placeholder='Organization name']").send_keys("testorg")
+    selenium.screenshot('org')
+    selenium.click_by(By.XPATH, "//span[.='Continue']")
 
-def test_upload(selenium):
-    file = selenium.find_by(By.XPATH, "//input[@type='file']")
-    selenium.driver.execute_script("arguments[0].removeAttribute('class')", file)
-    file.send_keys(join(DIR, '..', 'mattermost', 'simple.pdf'))
-    selenium.find_by(By.XPATH, "//span[contains(.,'Dismiss completed')]")
-    selenium.screenshot('uploaded')
+    selenium.find_by(By.XPATH, "//span[.='What tools do you use?']")
+    selenium.find_by(By.XPATH, "//span[.='Skip']")
+    selenium.screenshot('tools')
+    selenium.click_by(By.XPATH, "//span[.='Continue']")
+
+    selenium.find_by(By.XPATH, "//span[.='Invite your team members']")
+    selenium.screenshot('invite')
+    selenium.click_by(By.XPATH, "//span[.='Finish setup']")
+
+    selenium.find_by(By.XPATH, "//span[.='Visible to Admins only']")
+    selenium.screenshot('welcome')
+    selenium.click_by(By.XPATH, "//button[@class='close']")
+    selenium.invisible_by(By.XPATH, "//span[.='Visible to Admins only']")
+    selenium.screenshot('chat')
+
+def test_message(selenium):
+
+    selenium.clickable_by(By.XPATH, "//textarea[@id='post_textbox']").send_keys("test message")
+    selenium.click_by(By.XPATH, "//button[@data-testid='SendMessageButton']")
+    selenium.find_by(By.XPATH, "//div[@class='post-message__text' and .='test message']")
+    selenium.screenshot('message')
