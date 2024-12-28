@@ -8,6 +8,7 @@ local platform = '22.02';
 local selenium = '4.21.0-20240517';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
 local mattermost = 'syncloud-3';
+local python = '3.9-slim-buster';
 
 local build(arch, test_ui, dind) = [{
   kind: 'pipeline',
@@ -77,7 +78,7 @@ local build(arch, test_ui, dind) = [{
     },
     {
       name: 'test',
-      image: 'python:3.8-slim-buster',
+      image: 'python:' + python,
       commands: [
         'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
         'cd test',
@@ -126,7 +127,7 @@ local build(arch, test_ui, dind) = [{
          },
          {
            name: 'test-ui',
-           image: 'python:3.8-slim-buster',
+           image: 'python:' + python,
            commands: [
              'cd test',
              './deps.sh',
@@ -141,7 +142,7 @@ local build(arch, test_ui, dind) = [{
        ] else []) + [
     {
       name: 'test-upgrade',
-      image: 'python:3.8-slim-buster',
+      image: 'python:' + python,
       commands: [
         'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
         'cd test',
