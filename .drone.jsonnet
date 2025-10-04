@@ -4,7 +4,7 @@ local version = '10.3.1';
 local nginx = '1.24.0';
 local postgresql = "15-bullseye";
 local node = "18-bookworm-slim";
-local platform = '22.02';
+local platform = '25.02';
 local selenium = '4.21.0-20240517';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
 local mattermost = '10.12.0-syncloud';
@@ -169,7 +169,7 @@ local build(arch, test_ui) = [{
           ] else []) + [
    {
       name: 'upload',
-      image: 'debian:buster-slim',
+      image: 'debian:bookworm-slim',
       environment: {
         AWS_ACCESS_KEY_ID: {
           from_secret: 'AWS_ACCESS_KEY_ID',
@@ -195,7 +195,7 @@ local build(arch, test_ui) = [{
     },
     {
       name: 'promote',
-      image: 'debian:buster-slim',
+      image: 'debian:bookworm-slim',
       environment: {
         AWS_ACCESS_KEY_ID: {
           from_secret: 'AWS_ACCESS_KEY_ID',
