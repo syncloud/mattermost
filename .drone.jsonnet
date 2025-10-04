@@ -8,9 +8,12 @@ local platform = '22.02';
 local selenium = '4.21.0-20240517';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
 local mattermost = '10.12.0-syncloud';
-local python = '3.9-slim-buster';
+local python = '3.12-slim-bookworm';
+local distro_default = 'bookworm';
+local distros = ['bookworm'];
+local dind = '20.10.21-dind';
 
-local build(arch, test_ui, dind) = [{
+local build(arch, test_ui) = [{
   kind: 'pipeline',
   type: 'docker',
   name: arch,
@@ -56,7 +59,7 @@ local build(arch, test_ui, dind) = [{
         },
     {
       name: 'mattermost',
-      image: 'debian:buster-slim',
+      image: 'debian:bookworm-slim',
       commands: [
         './mattermost/download.sh ' + arch + ' ' + mattermost,
       ],
@@ -288,5 +291,5 @@ local build(arch, test_ui, dind) = [{
   ],
 }];
 
-build('amd64', true, '20.10.21-dind') +
-build('arm64', false, '20.10.21-dind')
+build('amd64', true) +
+build('arm64', false)
