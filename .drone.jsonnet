@@ -7,7 +7,7 @@ local node = "18-bookworm-slim";
 local platform = '22.02';
 local selenium = '4.21.0-20240517';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
-local mattermost = 'syncloud-3';
+local mattermost = '10.12.0-syncloud';
 local python = '3.9-slim-buster';
 
 local build(arch, test_ui, dind) = [{
@@ -19,13 +19,26 @@ local build(arch, test_ui, dind) = [{
     arch: arch,
   },
   steps: [
-    {
-      name: 'version',
-      image: 'debian:buster-slim',
-      commands: [
-        'echo $DRONE_BUILD_NUMBER > version',
-      ],
-    },
+   {
+             name: 'version',
+             image: 'debian:bookworm-slim',
+             commands: [
+               'echo $DRONE_BUILD_NUMBER > version',
+             ],
+           },
+           {
+             name: 'cli',
+             image: 'golang:1.23',
+             commands: [
+               'cd cli',
+               'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/install ./cmd/install',
+               'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/configure ./cmd/configure',
+               'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/pre-refresh ./cmd/pre-refresh',
+               'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/post-refresh ./cmd/post-refresh',
+               'CGO_ENABLED=0 go build -o ../build/snap/bin/cli ./cmd/cli',
+             ],
+           },
+  
   {
             name: "postgresql",
             image: "postgres:" + postgresql,
@@ -56,18 +69,7 @@ local build(arch, test_ui, dind) = [{
         './mattermost/test.sh',
       ],
     },
-    {
-      name: 'cli',
-      image: 'golang:1.20',
-      commands: [
-        'cd cli',
-        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/install ./cmd/install",
-        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/configure ./cmd/configure",
-        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/pre-refresh ./cmd/pre-refresh",
-        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/post-refresh ./cmd/post-refresh",
-        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/bin/cli ./cmd/cli",
-      ],
-    },
+   
     {
       name: 'package',
       image: 'debian:buster-slim',
@@ -288,4 +290,3 @@ local build(arch, test_ui, dind) = [{
 
 build('amd64', true, '20.10.21-dind') +
 build('arm64', false, '20.10.21-dind')
-
