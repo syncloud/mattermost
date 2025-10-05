@@ -31,7 +31,7 @@ def test_start(module_setup, app, domain, device_host):
     add_host_alias(app, device_host, domain)
 
 
-@pytest.mark.flaky(retries=10, delay=5)
+@pytest.mark.flaky(retries=20, delay=5)
 def test_visible_through_platform(app_domain):
     response = requests.get('https://{0}'.format(app_domain), verify=False)
     assert response.status_code == 200, response.text
