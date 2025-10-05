@@ -141,7 +141,7 @@ local build(arch, test_ui) = [{
                   commands: [
                     'cd test',
                     './deps.sh',
-                    'py.test -x -s ui.py --browser-height=4000 --distro=' + distro_default + ' --ver=$DRONE_BUILD_NUMBER --app=' + name + ' --browser=' + browser,
+                    'py.test -x -s ui.py --distro=' + distro_default + ' --ver=$DRONE_BUILD_NUMBER --app=' + name + ' --browser=' + browser,
                   ],
                   privileged: true,
                   volumes: [{
