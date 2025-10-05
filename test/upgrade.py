@@ -28,7 +28,13 @@ def test_start(module_setup, app, device_host, domain, device):
 
 def test_upgrade(device, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
     device.run_ssh('snap remove mattermost')
-#    device.run_ssh('snap install mattermost', retries=10)
+    device.run_ssh('snap install mattermost', retries=10)
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 100)
+    
+
+
+@pytest.mark.flaky(retries=20, delay=5)
+def test_visible_through_platform(app_domain):
+    response = requests.get('https://{0}'.format(app_domain), verify=False)
+    assert response.status_code == 200, response.text
 
