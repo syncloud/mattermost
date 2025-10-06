@@ -64,8 +64,9 @@ def test_login(selenium, device_user, device_password):
 
     selenium.find_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
     selenium.screenshot('experience')
-    selenium.click_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span'")
-
+    #selenium.click_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span'")
+    selenium.click_by(By.XPATH, "//button[@class='close']")
+   
     selenium.find_by(By.XPATH, "//span[.='Visible to Admins only']")
     selenium.screenshot('welcome')
     selenium.click_by(By.XPATH, "//button[@class='close']")
