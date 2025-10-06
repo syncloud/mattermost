@@ -54,11 +54,12 @@ def test_login(selenium, device_user, device_password):
     selenium.click_by(By.XPATH, "//span[.='Continue']")
 
     selenium.find_by(By.XPATH, "//span[.='What tools do you use?']")
-    selenium.find_by(By.XPATH, "//span[.='GitHub']")  
-    selenium.find_by(By.XPATH, "//span[.='GitLab']")  
+    selenium.find_by(By.XPATH, "//span[.='GitHub']")
+    selenium.find_by(By.XPATH, "//span[.='GitLab']")
     selenium.find_by(By.XPATH, "//span[.='Skip']")
     selenium.screenshot('tools')
-    selenium.click_by(By.XPATH, "//span[.='Continue']")
+    selenium.click_by(By.XPATH, '//span[.="What tools do you use?"]/../..//span[.="Continue"]')
+    # selenium.click_by(By.XPATH, "//span[.='Continue']")
 
     selenium.find_by(By.XPATH, "//span[.='Invite your team members']")
     selenium.screenshot('invite')
@@ -68,7 +69,7 @@ def test_login(selenium, device_user, device_password):
     selenium.screenshot('experience')
     #selenium.click_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span'")
     selenium.click_by(By.XPATH, "//button[@class='close']")
-   
+
     selenium.find_by(By.XPATH, "//span[contains(.,'Welcome to Town Square')]")
     #selenium.screenshot('welcome')
     #selenium.click_by(By.XPATH, "//button[@class='close']")
