@@ -47,9 +47,9 @@ def test_login(selenium, device_user, device_password):
     selenium.click_by(By.XPATH, "//span[.='Continue']")
 
     selenium.find_by(By.XPATH, "//span[.='What tools do you use?']")
-    selenium.find_by(By.XPATH, "//span[.='Skip']")
     selenium.screenshot('tools')
-    selenium.click_by(By.XPATH, "//span[.='Continue']")
+    selenium.click_by(By.XPATH, '//span[.="What tools do you use?"]/../..//span[.="Continue"]')
+    # selenium.click_by(By.XPATH, "//span[.='Continue']")
 
     selenium.find_by(By.XPATH, "//span[.='Invite your team members']")
     selenium.screenshot('invite')
