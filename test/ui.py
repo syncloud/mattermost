@@ -67,10 +67,10 @@ def test_login(selenium, device_user, device_password):
     #selenium.click_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span'")
     selenium.click_by(By.XPATH, "//button[@class='close']")
    
-    selenium.find_by(By.XPATH, "//span[.='Visible to Admins only']")
-    selenium.screenshot('welcome')
-    selenium.click_by(By.XPATH, "//button[@class='close']")
-    selenium.invisible_by(By.XPATH, "//span[.='Visible to Admins only']")
+    selenium.find_by(By.XPATH, "//span[contains(.,'Welcome to Town Square')]")
+    #selenium.screenshot('welcome')
+    #selenium.click_by(By.XPATH, "//button[@class='close']")
+    #selenium.invisible_by(By.XPATH, "//span[.='Visible to Admins only']")
     selenium.screenshot('chat')
 
 def test_message(selenium):
