@@ -1,5 +1,5 @@
 local name = 'mattermost';
-local browser = 'chrome';
+local browser = 'firefox';
 local version = '10.3.1';
 local nginx = '1.24.0';
 local postgresql = "15-bullseye";
