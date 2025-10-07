@@ -59,7 +59,7 @@ def test_login(selenium, device_user, device_password):
     selenium.find_by(By.XPATH, "//span[.='Skip']")
     selenium.screenshot('tools')
     selenium.click_by(By.XPATH, '//span[.="What tools do you use?"]/../..//span[.="Continue"]')
-    selenium.invisible_by(By.XPATH, ""//span[.='What tools do you use?']")
+    selenium.invisible_by(By.XPATH, "//span[.='What tools do you use?']")
     # selenium.click_by(By.XPATH, "//span[.='Continue']")
 
     selenium.find_by(By.XPATH, "//span[.='Invite your team members']")
@@ -85,3 +85,4 @@ def test_message(selenium):
     selenium.click_by(By.XPATH, "//button[@data-testid='SendMessageButton']")
     selenium.find_by(By.XPATH, "//div[@class='post-message__text' and .='test message']")
     selenium.screenshot('message')
+
