@@ -11,7 +11,7 @@ from syncloudlib.integration.hosts import add_host_alias
 
 def login(mode, selenium, device_user, device_password):
     selenium.find_by(By.XPATH, "//span[contains(.,'View in Browser')]").click()
-    selenium.find_by(By.XPATH, "//span[contains(.,'LDAP Credential')]").click()
+    selenium.click_by(By.XPATH, "//span[contains(.,'LDAP Credential')]")
     selenium.find_by(By.ID, "input_loginId").send_keys(device_user)
     password = selenium.find_by(By.ID, "input_password-input")
     password.send_keys(device_password)
@@ -62,4 +62,3 @@ def post_message(mode, selenium):
 def check_message(mode, selenium):
     selenium.find_by(By.XPATH, "//div[@class='post-message__text' and .='test message']")
     selenium.screenshot(mode+'-check-message')
-
