@@ -7,6 +7,7 @@ import requests
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from syncloudlib.integration.hosts import add_host_alias
+from test import lib
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -39,53 +40,14 @@ def test_visible_through_platform(app_domain):
 
 def test_login(selenium, device_user, device_password):
     selenium.open_app()
-    selenium.find_by(By.XPATH, "//span[contains(.,'View in Browser')]").click()
-    selenium.find_by(By.XPATH, "//span[contains(.,'LDAP Credential')]").click()
-    selenium.find_by(By.ID, "input_loginId").send_keys(device_user)
-    password = selenium.find_by(By.ID, "input_password-input")
-    password.send_keys(device_password)
-    selenium.screenshot('login')
-    #password.send_keys(Keys.RETURN)
-    #selenium.find_by(By.ID, "sign-in-button").click()
-    #selenium.find_by(By.ID, "accept-button").click()
-    selenium.find_by(By.XPATH, "//span[contains(.,'Log in')]").click()
-    selenium.find_by(By.XPATH, "//input[@placeholder='Organization name']").send_keys("testorg")
-    selenium.screenshot('org')
-    selenium.click_by(By.XPATH, "//span[.='Continue']")
+    lib.login("install", selenium, device_user, device_password)
 
-    selenium.find_by(By.XPATH, "//span[.='What tools do you use?']")
-    selenium.find_by(By.XPATH, "//span[.='GitHub']")
-    selenium.find_by(By.XPATH, "//span[.='GitLab']")
-    selenium.find_by(By.XPATH, "//span[.='Skip']")
-    selenium.screenshot('tools')
-    selenium.click_by(By.XPATH, '//span[.="What tools do you use?"]/../..//span[.="Continue"]')
-    selenium.invisible_by(By.XPATH, "//span[.='What tools do you use?']")
-    # selenium.click_by(By.XPATH, "//span[.='Continue']")
 
-    selenium.find_by(By.XPATH, "//span[.='Invite your team members']")
-    selenium.screenshot('invite')
-    selenium.click_by(By.XPATH, "//span[.='Finish setup']")
-    selenium.invisible_by(By.XPATH, "//span[.='Invite your team members']")
 
-    selenium.find_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
-    selenium.screenshot('experience')
-    #selenium.click_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span'")
-    selenium.click_by(By.XPATH, "//button[@class='close']")
-    selenium.invisible_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
- 
-    selenium.find_by(By.XPATH, "//span[contains(.,'Welcome to Town Square')]")
-    #selenium.screenshot('welcome')
-    #selenium.click_by(By.XPATH, "//button[@class='close']")
-    #selenium.invisible_by(By.XPATH, "//span[.='Visible to Admins only']")
-    #selenium.click_by(By.XPATH, "//span[contains(.,'No thanks')]")
-    selenium.invisible_by(By.XPATH, "//span[contains(.,'No thanks')]")
+def test_post_message(selenium):
+    lib.post_message("install", selenium)
 
-    selenium.screenshot('chat')
 
-def test_message(selenium):
-
-    selenium.clickable_by(By.XPATH, "//textarea[@id='post_textbox']").send_keys("test message")
-    selenium.click_by(By.XPATH, "//button[@data-testid='SendMessageButton']")
-    selenium.find_by(By.XPATH, "//div[@class='post-message__text' and .='test message']")
-    selenium.screenshot('message')
+def test_check_message(selenium):
+    lib.check_message("install", selenium)
 
