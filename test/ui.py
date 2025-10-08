@@ -77,7 +77,7 @@ def test_login(selenium, device_user, device_password):
     #selenium.screenshot('welcome')
     #selenium.click_by(By.XPATH, "//button[@class='close']")
     #selenium.invisible_by(By.XPATH, "//span[.='Visible to Admins only']")
-    selenium.click_by(By.XPATH, "//span[contains(.,'No thanks')]")
+    #selenium.click_by(By.XPATH, "//span[contains(.,'No thanks')]")
     selenium.invisible_by(By.XPATH, "//span[contains(.,'No thanks')]")
 
     selenium.screenshot('chat')
