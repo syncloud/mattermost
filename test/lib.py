@@ -11,6 +11,8 @@ from syncloudlib.integration.hosts import add_host_alias
 
 def login(mode, selenium, device_user, device_password):
     selenium.find_by(By.XPATH, "//span[contains(.,'View in Browser')]").click()
+    selenium.invisible_by(By.XPATH, "//span[contains(.,'View in Browser')]")
+    selenium.screenshot(mode+'-ldap')
     selenium.click_by(By.XPATH, "//span[contains(.,'LDAP Credential')]")
     selenium.find_by(By.ID, "input_loginId").send_keys(device_user)
     password = selenium.find_by(By.ID, "input_password-input")
