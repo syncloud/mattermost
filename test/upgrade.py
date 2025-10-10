@@ -33,7 +33,7 @@ def test_upgrade(selenium, device, device_user, device_password, device_host, ap
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 100)
 
     selenium.open_app()
-    lib.login("upgrade", selenium, device_user, device_password)
+    lib.login_prev("upgrade", selenium, device_user, device_password)
     lib.post_message("upgrade", selenium)
     lib.check_message("upgrade", selenium)
 

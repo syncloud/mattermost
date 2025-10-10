@@ -40,7 +40,7 @@ def test_visible_through_platform(app_domain):
 
 def test_login(selenium, device_user, device_password):
     selenium.open_app()
-    lib.login("install", selenium, device_user, device_password)
+    lib.login_next("install", selenium, device_user, device_password)
 
 
 
