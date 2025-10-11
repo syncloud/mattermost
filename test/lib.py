@@ -40,15 +40,16 @@ def login_prev(mode, selenium, device_user, device_password):
     selenium.click_by(By.XPATH, "//span[.='Finish setup']")
     selenium.invisible_by(By.XPATH, "//span[.='Invite your team members']")
 
-    #selenium.find_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
-    #selenium.screenshot(mode+'-experience')
-    #selenium.click_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span'")
-    #selenium.click_by(By.XPATH, "//button[@class='close']")
-    #selenium.invisible_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
     selenium.find_by(By.XPATH, "//span[contains(.,'Visible to Admins only')]")
     selenium.click_by(By.XPATH, "//span[contains(.,'Next')]")
     selenium.invisible_by(By.XPATH, "//span[contains(.,'Visible to Admins only')]")
  
+    selenium.find_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
+    selenium.screenshot(mode+'-experience')
+    selenium.click_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span'")
+    selenium.click_by(By.XPATH, "//button[@class='close']")
+    selenium.invisible_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
+
     selenium.find_by(By.XPATH, "//span[contains(.,'Welcome to Town Square')]")
     #selenium.screenshot(mode+'-welcome')
     #selenium.click_by(By.XPATH, "//button[@class='close']")
