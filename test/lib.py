@@ -46,7 +46,7 @@ def login_prev(mode, selenium, device_user, device_password):
  
     selenium.find_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
     selenium.screenshot(mode+'-experience')
-    selenium.click_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span'")
+    #selenium.find_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span")
     selenium.click_by(By.XPATH, "//button[@class='close']")
     selenium.invisible_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
 
