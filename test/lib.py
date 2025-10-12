@@ -58,8 +58,10 @@ def login_prev(mode, selenium, device_user, device_password):
     #selenium.click_by(By.XPATH, "//button[@class='close']")
     #selenium.invisible_by(By.XPATH, "//span[.='Visible to Admins only']")
     
-    selenium.click_by(By.XPATH, "//span[contains(.,'No thanks')]")
-    selenium.invisible_by(By.XPATH, "//span[contains(.,'No thanks')]")
+    if selenium.exists_by(By.XPATH, "//span[contains(.,'No thanks')]"):
+        selenium.screenshot(mode+'-no-thanks')
+        selenium.click_by(By.XPATH, "//span[contains(.,'No thanks')]")
+        selenium.invisible_by(By.XPATH, "//span[contains(.,'No thanks')]")
 
     selenium.screenshot(mode+'-chat')
 
