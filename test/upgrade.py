@@ -38,6 +38,6 @@ def test_upgrade(selenium, device, device_user, device_password, device_host, ap
     lib.check_message("upgrade", selenium)
 
     local_install(device_host, device_password, app_archive_path)
-    
+    selenium.open_app()
     lib.check_message("upgrade", selenium)
 
