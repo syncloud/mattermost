@@ -4,6 +4,7 @@ from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 from syncloudlib.http import wait_for_rest
 import requests
+from test import lib
 
 TMP_DIR = '/tmp/syncloud'
 
@@ -26,9 +27,18 @@ def test_start(module_setup, app, device_host, domain, device):
     device.run_ssh('mkdir {0}'.format(TMP_DIR), throw=False)
 
 
-def test_upgrade(device, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
+def test_upgrade(selenium, device, device_user, device_password, device_host, app_archive_path, app_domain, app_dir):
     device.run_ssh('snap remove mattermost')
-#    device.run_ssh('snap install mattermost', retries=10)
+    device.run_ssh('snap install mattermost', retries=10)
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 100)
+
+    selenium.open_app()
+    lib.login_prev("upgrade", selenium, device_user, device_password)
+    lib.post_message("upgrade", selenium)
+    lib.check_message("upgrade", selenium)
+
     local_install(device_host, device_password, app_archive_path)
     wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 100)
+    selenium.open_app()
+    lib.check_message("upgrade", selenium)
 

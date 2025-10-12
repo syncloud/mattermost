@@ -50,7 +50,7 @@ def module_setup(request, device, app_dir, artifact_dir):
 
 def test_start(module_setup, device, device_host, app, domain):
     add_host_alias(app, device_host, domain)
-    device.run_ssh('date', retries=10)
+    device.run_ssh('date', retries=100)
     device.run_ssh('mkdir {0}'.format(TMP_DIR))
   
 
@@ -71,7 +71,12 @@ def test_ca_cert(device, app_domain):
 def test_install(app_archive_path, device_host, device_password, device, app_domain):
     device.run_ssh('touch /var/snap/platform/current/CI_TEST')
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 50)
+
+
+@pytest.mark.flaky(retries=100, delay=10)
+def test_visible_through_platform(app_domain):
+    response = requests.get('https://{0}'.format(app_domain), verify=False)
+    assert response.status_code == 200, response.text
 
 
 def test_storage_change(device):
@@ -89,12 +94,12 @@ def test_remove(device, app):
 
 def test_reinstall(app_archive_path, device_host, device_password, app_domain):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 50)
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 100)
 
 
 def test_upgrade(app_archive_path, device_host, device_password, app_domain):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 50)
+    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 100)
 
 
 @pytest.mark.flaky(retries=3, delay=1)

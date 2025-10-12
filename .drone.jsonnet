@@ -1,16 +1,19 @@
 local name = 'mattermost';
-local browser = 'chrome';
+local browser = 'firefox';
 local version = '10.3.1';
 local nginx = '1.24.0';
 local postgresql = "15-bullseye";
 local node = "18-bookworm-slim";
-local platform = '22.02';
-local selenium = '4.21.0-20240517';
+local platform = '25.02';
+local selenium = '4.35.0-20250828';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
-local mattermost = 'syncloud-3';
-local python = '3.9-slim-buster';
+local mattermost = '10.12.0-syncloud';
+local python = '3.12-slim-bookworm';
+local distro_default = 'bookworm';
+local distros = ['bookworm'];
+local dind = '20.10.21-dind';
 
-local build(arch, test_ui, dind) = [{
+local build(arch, test_ui) = [{
   kind: 'pipeline',
   type: 'docker',
   name: arch,
@@ -19,13 +22,26 @@ local build(arch, test_ui, dind) = [{
     arch: arch,
   },
   steps: [
-    {
-      name: 'version',
-      image: 'debian:buster-slim',
-      commands: [
-        'echo $DRONE_BUILD_NUMBER > version',
-      ],
-    },
+   {
+             name: 'version',
+             image: 'debian:bookworm-slim',
+             commands: [
+               'echo $DRONE_BUILD_NUMBER > version',
+             ],
+           },
+           {
+             name: 'cli',
+             image: 'golang:1.23',
+             commands: [
+               'cd cli',
+               'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/install ./cmd/install',
+               'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/configure ./cmd/configure',
+               'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/pre-refresh ./cmd/pre-refresh',
+               'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/post-refresh ./cmd/post-refresh',
+               'CGO_ENABLED=0 go build -o ../build/snap/bin/cli ./cmd/cli',
+             ],
+           },
+  
   {
             name: "postgresql",
             image: "postgres:" + postgresql,
@@ -43,7 +59,7 @@ local build(arch, test_ui, dind) = [{
         },
     {
       name: 'mattermost',
-      image: 'debian:buster-slim',
+      image: 'debian:bookworm-slim',
       commands: [
         './mattermost/download.sh ' + arch + ' ' + mattermost,
       ],
@@ -56,103 +72,104 @@ local build(arch, test_ui, dind) = [{
         './mattermost/test.sh',
       ],
     },
-    {
-      name: 'cli',
-      image: 'golang:1.20',
-      commands: [
-        'cd cli',
-        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/install ./cmd/install",
-        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/configure ./cmd/configure",
-        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/pre-refresh ./cmd/pre-refresh",
-        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/meta/hooks/post-refresh ./cmd/post-refresh",
-        "go build -ldflags '-linkmode external -extldflags -static' -o ../build/snap/bin/cli ./cmd/cli",
-      ],
-    },
+   
     {
       name: 'package',
-      image: 'debian:buster-slim',
+      image: 'debian:bookworm-slim',
       commands: [
         'VERSION=$(cat version)',
         './package.sh ' + name + ' $VERSION ',
       ],
     },
-    {
-      name: 'test',
-      image: 'python:' + python,
-      commands: [
-        'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
-        'cd test',
-        './deps.sh',
-        'py.test -rA -vvvvv -x -s test.py --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.buster.com --app=' + name + ' --arch=' + arch,
-      ],
-    },
-  ] + (if test_ui then [
-    {
-            name: "selenium",
-            image: "selenium/standalone-" + browser + ":" + selenium,
-            detach: true,
-            environment: {
-                SE_NODE_SESSION_TIMEOUT: "999999",
-                START_XVFB: "true"
-            },
-               volumes: [{
-                name: "shm",
-                path: "/dev/shm"
-            }],
-            commands: [
-                "cat /etc/hosts",
-                "getent hosts " + name + ".buster.com | sed 's/" + name +".buster.com/auth.buster.com/g' | sudo tee -a /etc/hosts",
-                "cat /etc/hosts",
-                "/opt/bin/entry_point.sh"
-            ]
-         },
-     {
-           name: 'selenium-video',
-           image: 'selenium/video:ffmpeg-6.1.1-20240517',
-           detach: true,
-           environment: {
-             DISPLAY_CONTAINER_NAME: 'selenium',
-             FILE_NAME: 'video.mkv',
-           },
-           volumes: [
-             {
-               name: 'shm',
-               path: '/dev/shm',
-             },
-             {
-               name: 'videos',
-               path: '/videos',
-             },
-           ],
-         },
-         {
-           name: 'test-ui',
-           image: 'python:' + python,
-           commands: [
-             'cd test',
-             './deps.sh',
-             'py.test -x -s ui.py --distro=buster --ui-mode=desktop --domain=buster.com --device-host=' + name + '.buster.com --app=' + name + ' --browser-height=2000 --browser=' + browser,
-           ],
-           volumes: [{
-             name: 'videos',
-             path: '/videos',
-           }],
-         },
+    ] + [
+           {
+             name: 'test ' + distro,
+             image: 'python:' + python,
+             commands: [
+               'cd test',
+               './deps.sh',
+               'py.test -x -s test.py --distro=' + distro + ' --ver=$DRONE_BUILD_NUMBER --app=' + name,
+             ],
+           }
+           for distro in distros
 
-       ] else []) + [
-    {
-      name: 'test-upgrade',
-      image: 'python:' + python,
-      commands: [
-        'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
-        'cd test',
-        './deps.sh',
-        'py.test -x -s upgrade.py --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.buster.com --app=' + name + ' --browser=' + browser,
-      ],
-    },
-    {
+    ] + (if test_ui then [
+                {
+                  name: 'selenium',
+                  image: 'selenium/standalone-' + browser + ':' + selenium,
+                  detach: true,
+                  environment: {
+                    SE_NODE_SESSION_TIMEOUT: '999999',
+                    START_XVFB: 'true',
+                  },
+                  volumes: [{
+                    name: 'shm',
+                    path: '/dev/shm',
+                  }],
+                  commands: [
+                    'cat /etc/hosts',
+                    'DOMAIN="' + distro_default + '.com"',
+                    'APP_DOMAIN="' + name + '.' + distro_default + '.com"',
+                    'getent hosts $APP_DOMAIN | sed "s/$APP_DOMAIN/auth.$DOMAIN/g" | sudo tee -a /etc/hosts',
+                    'cat /etc/hosts',
+                    '/opt/bin/entry_point.sh',
+                  ],
+                },
+                {
+                  name: 'selenium-video',
+                  image: 'selenium/video:ffmpeg-6.1.1-20240621',
+                  detach: true,
+                  environment: {
+                    DISPLAY_CONTAINER_NAME: 'selenium',
+                    FILE_NAME: 'video.mkv',
+                  },
+                  volumes: [
+                    {
+                      name: 'shm',
+                      path: '/dev/shm',
+                    },
+                    {
+                      name: 'videos',
+                      path: '/videos',
+                    },
+                  ],
+                },
+
+                {
+                  name: 'test-ui',
+                  image: 'python:' + python,
+                  commands: [
+                    'cd test',
+                    './deps.sh',
+                    'py.test -x -s ui.py --distro=' + distro_default + ' --ver=$DRONE_BUILD_NUMBER --app=' + name + ' --browser=' + browser,
+                  ],
+                  privileged: true,
+                  volumes: [{
+                    name: 'videos',
+                    path: '/videos',
+                  }],
+                },
+              ]
+              else []) +
+         (if arch == 'amd64' then [
+            {
+              name: 'test-upgrade',
+              image: 'python:' + python,
+              commands: [
+                'cd test',
+                './deps.sh',
+                'py.test -x -s upgrade.py --distro=' + distro_default + ' --ver=$DRONE_BUILD_NUMBER --app=' + name,
+              ],
+              privileged: true,
+              volumes: [{
+                name: 'videos',
+                path: '/videos',
+              }],
+            },
+          ] else []) + [
+   {
       name: 'upload',
-      image: 'debian:buster-slim',
+      image: 'debian:bookworm-slim',
       environment: {
         AWS_ACCESS_KEY_ID: {
           from_secret: 'AWS_ACCESS_KEY_ID',
@@ -178,7 +195,7 @@ local build(arch, test_ui, dind) = [{
     },
     {
       name: 'promote',
-      image: 'debian:buster-slim',
+      image: 'debian:bookworm-slim',
       environment: {
         AWS_ACCESS_KEY_ID: {
           from_secret: 'AWS_ACCESS_KEY_ID',
@@ -232,19 +249,8 @@ local build(arch, test_ui, dind) = [{
   },
   services: [
     {
-      name: 'docker',
-      image: 'docker:' + dind,
-      privileged: true,
-      volumes: [
-        {
-          name: 'dockersock',
-          path: '/var/run',
-        },
-      ],
-    },
-    {
-      name: name + '.buster.com',
-      image: 'syncloud/platform-buster-' + arch + ':' + platform,
+      name: name + '.' + distro + '.com',
+      image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
       privileged: true,
       volumes: [
         {
@@ -256,7 +262,8 @@ local build(arch, test_ui, dind) = [{
           path: '/dev',
         },
       ],
-    },
+    }
+    for distro in distros
   ],
   volumes: [
     {
@@ -286,6 +293,5 @@ local build(arch, test_ui, dind) = [{
   ],
 }];
 
-build('amd64', true, '20.10.21-dind') +
-build('arm64', false, '20.10.21-dind')
-
+build('amd64', true) +
+build('arm64', false)
