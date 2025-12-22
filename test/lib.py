@@ -86,15 +86,16 @@ def login_next(mode, selenium, device_user, device_password):
     selenium.invisible_by(By.XPATH, "//span[.='Invite your team members']")
 
     selenium.find_by(By.XPATH, "//span[.='Mattermost 11.1 is here!']")
+    selenium.find_by(By.XPATH, "//span[.='Visible to Admins only']")
     selenium.screenshot(mode+'-welcome')
     selenium.click_by(By.XPATH, "//button[@class='close']")
     selenium.invisible_by(By.XPATH, "//span[.='Visible to Admins only']")
  
-    selenium.find_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
-    selenium.screenshot(mode+'-experience')
+    #selenium.find_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
+    #selenium.screenshot(mode+'-experience')
     #selenium.click_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span'")
-    selenium.click_by(By.XPATH, "//button[@class='close']")
-    selenium.invisible_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
+    #selenium.click_by(By.XPATH, "//button[@class='close']")
+    #selenium.invisible_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
  
     selenium.screenshot(mode+'-chat')
 
