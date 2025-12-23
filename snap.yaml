@@ -7,7 +7,8 @@ apps:
       - network
       - network-bind
     restart-condition: always
- 
+    restart-delay: 10s
+
   mattermost:
     user: mattermost
     command: bin/service.mattermost.sh
@@ -16,6 +17,7 @@ apps:
       - network
       - network-bind
     restart-condition: always
+    restart-delay: 10s
 
   psql:
     command: bin/psql.sh

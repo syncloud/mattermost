@@ -1,6 +1,6 @@
 local name = 'mattermost';
 local browser = 'firefox';
-local version = '10.3.1';
+local version = '11.2.1-syncloud';
 local nginx = '1.24.0';
 local postgresql = "15-bullseye";
 local node = "18-bookworm-slim";
