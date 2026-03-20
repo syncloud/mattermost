@@ -1,13 +1,12 @@
 local name = 'mattermost';
 local browser = 'firefox';
-local version = '11.2.1-syncloud';
 local nginx = '1.24.0';
 local postgresql = "15-bullseye";
 local node = "18-bookworm-slim";
-local platform = '25.02';
+local platform = '26.03';
 local selenium = '4.35.0-20250828';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
-local mattermost = '10.12.0-syncloud';
+local mattermost = '11.5.1-syncloud';
 local python = '3.12-slim-bookworm';
 local distro_default = 'bookworm';
 local distros = ['bookworm'];
@@ -31,7 +30,7 @@ local build(arch, test_ui) = [{
            },
            {
              name: 'cli',
-             image: 'golang:1.23',
+             image: 'golang:1.25',
              commands: [
                'cd cli',
                'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/install ./cmd/install',
@@ -117,7 +116,7 @@ local build(arch, test_ui) = [{
                 },
                 {
                   name: 'selenium-video',
-                  image: 'selenium/video:ffmpeg-6.1.1-20240621',
+                  image: 'selenium/video:ffmpeg-8.0-20251212',
                   detach: true,
                   environment: {
                     DISPLAY_CONTAINER_NAME: 'selenium',
