@@ -3,7 +3,10 @@ local browser = 'firefox';
 local nginx = '1.24.0';
 local postgresql = "15-bullseye";
 local node = "18-bookworm-slim";
-local platform = '26.03';
+local platforms = {
+  bookworm: '26.03',
+  buster: '25.02',
+};
 local selenium = '4.35.0-20250828';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
 local mattermost = '11.5.1-syncloud';
@@ -49,13 +52,6 @@ local build(arch, test_ui) = [{
             ]
            
         },
-        {
-            name: "postgresql test",
-            image: 'syncloud/platform-buster-' + arch + ':' + platform,
-            commands: [
-                "./postgresql/test.sh"
-            ]
-        },
     {
       name: 'mattermost',
       image: 'debian:bookworm-slim',
@@ -63,14 +59,25 @@ local build(arch, test_ui) = [{
         './mattermost/download.sh ' + arch + ' ' + mattermost,
       ],
     },
-
+    ] + [
+        {
+            name: "postgresql test " + distro,
+            image: 'syncloud/platform-' + distro + '-' + arch + ':' + platforms[distro],
+            commands: [
+                "./postgresql/test.sh"
+            ]
+        }
+        for distro in distros
+    ] + [
     {
-      name: 'mattermost test',
-      image: 'syncloud/platform-buster-' + arch + ':' + platform,
+      name: 'mattermost test ' + distro,
+      image: 'syncloud/platform-' + distro + '-' + arch + ':' + platforms[distro],
       commands: [
         './mattermost/test.sh',
       ],
-    },
+    }
+    for distro in distros
+    ] + [
    
     {
       name: 'package',
@@ -249,7 +256,7 @@ local build(arch, test_ui) = [{
   services: [
     {
       name: name + '.' + distro + '.com',
-      image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
+      image: 'syncloud/platform-' + distro + '-' + arch + ':' + platforms[distro],
       privileged: true,
       volumes: [
         {
