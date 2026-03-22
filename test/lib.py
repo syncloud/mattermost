@@ -41,20 +41,11 @@ def login_prev(mode, selenium, device_user, device_password):
     selenium.click_by(By.XPATH, "//span[.='Finish setup']")
     selenium.invisible_by(By.XPATH, "//span[.='Invite your team members']")
 
-    # wait for chat to load, then screenshot what we see
+    selenium.screenshot(mode+'-after-setup')
+    # wait for chat to load
     selenium.find_by(By.XPATH, "//textarea[@id='post_textbox']")
-    selenium.screenshot(mode+'-after-finish-setup')
-    selenium.find_by(By.XPATH, "//span[.='Mattermost 11.1 is here!']")
-    selenium.screenshot(mode+'-welcome')
-    selenium.click_by(By.XPATH, "//button[@class='close']")
-    selenium.invisible_by(By.XPATH, "//span[.='Visible to Admins only']")
-
-    #selenium.find_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
-    #selenium.screenshot(mode+'-experience')
-    #selenium.click_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span'")
-    #selenium.click_by(By.XPATH, "//button[@class='close']")
-    #selenium.invisible_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
-
+    selenium.screenshot(mode+'-chat-loaded')
+    dismiss_modals(selenium)
     selenium.screenshot(mode+'-chat')
 
 
