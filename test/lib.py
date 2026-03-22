@@ -59,46 +59,38 @@ def login_next(mode, selenium, device_user, device_password):
     selenium.screenshot(mode+'-before-view-in-browser')
     selenium.clickable_by(By.XPATH, "//span[contains(.,'View in Browser')]").click()
     selenium.invisible_by(By.XPATH, "//span[contains(.,'View in Browser')]")
+    selenium.screenshot(mode+'-after-view-in-browser')
+    elem = selenium.find_by(By.XPATH, "//span[contains(.,'AD/LDAP Credentials')]")
+    selenium.driver.execute_script("arguments[0].scrollIntoView();", elem)
     selenium.screenshot(mode+'-ldap')
-    selenium.click_by(By.XPATH, "//span[contains(.,'LDAP Credential')]")
+    elem.click()
     selenium.find_by(By.ID, "input_loginId").send_keys(device_user)
     password = selenium.find_by(By.ID, "input_password-input")
     password.send_keys(device_password)
     selenium.screenshot(mode+'-login')
-    #password.send_keys(Keys.RETURN)
-    #selenium.find_by(By.ID, "sign-in-button").click()
-    #selenium.find_by(By.ID, "accept-button").click()
     selenium.find_by(By.XPATH, "//span[contains(.,'Log in')]").click()
     selenium.find_by(By.XPATH, "//input[@placeholder='Organization name']").send_keys("testorg")
     selenium.screenshot(mode+'-org')
     selenium.click_by(By.XPATH, "//span[.='Continue']")
 
     selenium.find_by(By.XPATH, "//span[.='What tools do you use?']")
-    selenium.find_by(By.XPATH, "//span[.='GitHub']")
-    selenium.find_by(By.XPATH, "//span[.='GitLab']")
-    selenium.find_by(By.XPATH, "//span[.='Skip']")
     selenium.screenshot(mode+'-tools')
     selenium.click_by(By.XPATH, '//span[.="What tools do you use?"]/../..//span[.="Continue"]')
     selenium.invisible_by(By.XPATH, "//span[.='What tools do you use?']")
-    # selenium.click_by(By.XPATH, "//span[.='Continue']")
 
     selenium.find_by(By.XPATH, "//span[.='Invite your team members']")
     selenium.screenshot(mode+'-invite')
     selenium.click_by(By.XPATH, "//span[.='Finish setup']")
     selenium.invisible_by(By.XPATH, "//span[.='Invite your team members']")
 
-    selenium.find_by(By.XPATH, "//span[.='Mattermost 11.1 is here!']")
-    selenium.find_by(By.XPATH, "//span[.='Visible to Admins only']")
-    selenium.screenshot(mode+'-welcome')
-    selenium.click_by(By.XPATH, "//button[@class='close']")
-    selenium.invisible_by(By.XPATH, "//span[.='Visible to Admins only']")
- 
-    #selenium.find_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
-    #selenium.screenshot(mode+'-experience')
-    #selenium.click_by(By.XPATH, "//span[contains(.,'Experience a better way')]/../../../..//span'")
-    #selenium.click_by(By.XPATH, "//button[@class='close']")
-    #selenium.invisible_by(By.XPATH, "//span[contains(.,'Experience a better way')]")
- 
+    selenium.screenshot(mode+'-after-setup')
+    # dismiss any welcome modal
+    try:
+        close_btn = selenium.driver.find_element(By.XPATH, "//button[@class='close']")
+        close_btn.click()
+    except Exception:
+        pass
+
     selenium.screenshot(mode+'-chat')
 
 
