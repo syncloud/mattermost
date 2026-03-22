@@ -84,21 +84,36 @@ def login_next(mode, selenium, device_user, device_password):
     selenium.invisible_by(By.XPATH, "//span[.='Invite your team members']")
 
     selenium.screenshot(mode+'-after-setup')
-    # dismiss any welcome modal
-    try:
-        close_btn = selenium.driver.find_element(By.XPATH, "//button[@class='close']")
-        close_btn.click()
-    except Exception:
-        pass
-
+    # wait for chat to load
+    selenium.find_by(By.XPATH, "//textarea[@id='post_textbox']")
+    selenium.screenshot(mode+'-chat-loaded')
+    dismiss_modals(selenium)
     selenium.screenshot(mode+'-chat')
 
 
+def dismiss_modals(selenium):
+    import time
+    time.sleep(2)
+    # dismiss "Experience a better way to communicate in threads" modal
+    for xpath in [
+        "//button[@class='close']",
+        "//span[contains(.,'No thanks')]",
+    ]:
+        try:
+            elem = selenium.driver.find_element(By.XPATH, xpath)
+            selenium.driver.execute_script("arguments[0].click();", elem)
+            time.sleep(1)
+        except Exception:
+            pass
+
+
 def post_message(mode, selenium):
+    dismiss_modals(selenium)
     selenium.clickable_by(By.XPATH, "//textarea[@id='post_textbox']").send_keys("test message")
     selenium.click_by(By.XPATH, "//button[@data-testid='SendMessageButton']")
     selenium.screenshot(mode+'-post-message')
 
 def check_message(mode, selenium):
+    dismiss_modals(selenium)
     selenium.find_by(By.XPATH, "//div[@class='post-message__text' and .='test message']")
     selenium.screenshot(mode+'-check-message')
