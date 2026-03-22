@@ -10,7 +10,8 @@ from syncloudlib.integration.hosts import add_host_alias
 
 
 def login_prev(mode, selenium, device_user, device_password):
-    selenium.click_by(By.XPATH, "//span[contains(.,'View in Browser')]")
+    selenium.screenshot(mode+'-before-view-in-browser')
+    selenium.clickable_by(By.XPATH, "//span[contains(.,'View in Browser')]").click()
     selenium.invisible_by(By.XPATH, "//span[contains(.,'View in Browser')]")
     selenium.screenshot(mode+'-ldap')
     selenium.click_by(By.XPATH, "//span[contains(.,'LDAP Credential')]")
@@ -55,7 +56,8 @@ def login_prev(mode, selenium, device_user, device_password):
 
 
 def login_next(mode, selenium, device_user, device_password):
-    selenium.click_by(By.XPATH, "//span[contains(.,'View in Browser')]")
+    selenium.screenshot(mode+'-before-view-in-browser')
+    selenium.clickable_by(By.XPATH, "//span[contains(.,'View in Browser')]").click()
     selenium.invisible_by(By.XPATH, "//span[contains(.,'View in Browser')]")
     selenium.screenshot(mode+'-ldap')
     selenium.click_by(By.XPATH, "//span[contains(.,'LDAP Credential')]")
