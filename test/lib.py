@@ -9,22 +9,23 @@ from selenium.webdriver.common.keys import Keys
 from syncloudlib.integration.hosts import add_host_alias
 
 
+def wait_loaded(selenium):
+    selenium.invisible_by(By.ID, "initialPageLoadingScreen")
+
+
 def login_prev(mode, selenium, device_user, device_password):
     selenium.screenshot(mode+'-before-view-in-browser')
-    selenium.invisible_by(By.ID, "initialPageLoadingScreen")
-    selenium.screenshot(mode+'-loaded')
+    wait_loaded(selenium)
     selenium.find_by(By.XPATH, "//span[contains(.,'View in Browser')]").click()
     selenium.invisible_by(By.XPATH, "//span[contains(.,'View in Browser')]")
-    selenium.invisible_by(By.ID, "initialPageLoadingScreen")
+    wait_loaded(selenium)
     selenium.screenshot(mode+'-ldap')
     selenium.click_by(By.XPATH, "//span[contains(.,'LDAP Credential')]")
+    wait_loaded(selenium)
     selenium.find_by(By.ID, "input_loginId").send_keys(device_user)
     password = selenium.find_by(By.ID, "input_password-input")
     password.send_keys(device_password)
     selenium.screenshot(mode+'-login')
-    #password.send_keys(Keys.RETURN)
-    #selenium.find_by(By.ID, "sign-in-button").click()
-    #selenium.find_by(By.ID, "accept-button").click()
     selenium.find_by(By.XPATH, "//span[contains(.,'Log in')]").click()
     selenium.find_by(By.XPATH, "//input[@placeholder='Organization name']").send_keys("testorg")
     selenium.screenshot(mode+'-org')
@@ -54,16 +55,16 @@ def login_prev(mode, selenium, device_user, device_password):
 
 def login_next(mode, selenium, device_user, device_password):
     selenium.screenshot(mode+'-before-view-in-browser')
-    selenium.invisible_by(By.ID, "initialPageLoadingScreen")
-    selenium.screenshot(mode+'-loaded')
+    wait_loaded(selenium)
     selenium.find_by(By.XPATH, "//span[contains(.,'View in Browser')]").click()
     selenium.invisible_by(By.XPATH, "//span[contains(.,'View in Browser')]")
-    selenium.invisible_by(By.ID, "initialPageLoadingScreen")
+    wait_loaded(selenium)
     selenium.screenshot(mode+'-after-view-in-browser')
     elem = selenium.find_by(By.XPATH, "//span[contains(.,'AD/LDAP Credentials')]")
     selenium.driver.execute_script("arguments[0].scrollIntoView();", elem)
     selenium.screenshot(mode+'-ldap')
     elem.click()
+    wait_loaded(selenium)
     selenium.find_by(By.ID, "input_loginId").send_keys(device_user)
     password = selenium.find_by(By.ID, "input_password-input")
     password.send_keys(device_password)
