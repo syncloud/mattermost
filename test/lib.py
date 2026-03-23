@@ -11,9 +11,9 @@ from syncloudlib.integration.hosts import add_host_alias
 
 def login_prev(mode, selenium, device_user, device_password):
     selenium.screenshot(mode+'-before-view-in-browser')
-    elem = selenium.find_by(By.XPATH, "//span[contains(.,'View in Browser')]")
-    selenium.screenshot(mode+'-found-view-in-browser')
-    elem.click()
+    selenium.invisible_by(By.ID, "initialPageLoadingScreen")
+    selenium.screenshot(mode+'-loaded')
+    selenium.find_by(By.XPATH, "//span[contains(.,'View in Browser')]").click()
     selenium.invisible_by(By.XPATH, "//span[contains(.,'View in Browser')]")
     selenium.screenshot(mode+'-ldap')
     selenium.click_by(By.XPATH, "//span[contains(.,'LDAP Credential')]")
@@ -53,9 +53,9 @@ def login_prev(mode, selenium, device_user, device_password):
 
 def login_next(mode, selenium, device_user, device_password):
     selenium.screenshot(mode+'-before-view-in-browser')
-    elem = selenium.find_by(By.XPATH, "//span[contains(.,'View in Browser')]")
-    selenium.screenshot(mode+'-found-view-in-browser')
-    elem.click()
+    selenium.invisible_by(By.ID, "initialPageLoadingScreen")
+    selenium.screenshot(mode+'-loaded')
+    selenium.find_by(By.XPATH, "//span[contains(.,'View in Browser')]").click()
     selenium.invisible_by(By.XPATH, "//span[contains(.,'View in Browser')]")
     selenium.screenshot(mode+'-after-view-in-browser')
     elem = selenium.find_by(By.XPATH, "//span[contains(.,'AD/LDAP Credentials')]")
