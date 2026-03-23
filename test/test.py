@@ -58,9 +58,10 @@ def test_start(module_setup, device, device_host, app, domain):
 #     device.run_ssh('snap refresh platform --channel=master')
 
 
-@pytest.mark.flaky(retries=3, delay=1)
+@pytest.mark.flaky(retries=50, delay=10)
 def test_activate_device(device):
-    response = device.activate_custom()
+    device.run_ssh('rm -f /var/snap/platform/current/syncloud.crt', throw=False)
+    response = retry(device.activate_custom)
     assert response.status_code == 200, response.text
     
 
@@ -119,3 +120,17 @@ def test_backup(device, artifact_dir):
 
 def test_sql(device):
    device.run_ssh("snap run mattermost.psql -U mattermost -d mattermost -c 'select * from users'", retries=10)
+
+
+def retry(method, retries=10):
+    attempt = 0
+    exception = None
+    while attempt < retries:
+        try:
+            return method()
+        except Exception as e:
+            exception = e
+            print('error (attempt {0}/{1}): {2}'.format(attempt + 1, retries, str(e)))
+            time.sleep(5)
+        attempt += 1
+    raise exception

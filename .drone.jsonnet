@@ -1,13 +1,15 @@
 local name = 'mattermost';
 local browser = 'firefox';
-local version = '11.2.1-syncloud';
 local nginx = '1.24.0';
 local postgresql = "15-bullseye";
 local node = "18-bookworm-slim";
-local platform = '25.02';
+local platforms = {
+  bookworm: '26.03',
+  buster: '25.02',
+};
 local selenium = '4.35.0-20250828';
 local deployer = 'https://github.com/syncloud/store/releases/download/4/syncloud-release';
-local mattermost = '10.12.0-syncloud';
+local mattermost = '11.5.1-syncloud';
 local python = '3.12-slim-bookworm';
 local distro_default = 'bookworm';
 local distros = ['bookworm'];
@@ -31,7 +33,7 @@ local build(arch, test_ui) = [{
            },
            {
              name: 'cli',
-             image: 'golang:1.23',
+             image: 'golang:1.25',
              commands: [
                'cd cli',
                'CGO_ENABLED=0 go build -o ../build/snap/meta/hooks/install ./cmd/install',
@@ -50,13 +52,6 @@ local build(arch, test_ui) = [{
             ]
            
         },
-        {
-            name: "postgresql test",
-            image: 'syncloud/platform-buster-' + arch + ':' + platform,
-            commands: [
-                "./postgresql/test.sh"
-            ]
-        },
     {
       name: 'mattermost',
       image: 'debian:bookworm-slim',
@@ -64,14 +59,25 @@ local build(arch, test_ui) = [{
         './mattermost/download.sh ' + arch + ' ' + mattermost,
       ],
     },
-
+    ] + [
+        {
+            name: "postgresql test " + distro,
+            image: 'syncloud/platform-' + distro + '-' + arch + ':' + platforms[distro],
+            commands: [
+                "./postgresql/test.sh"
+            ]
+        }
+        for distro in distros
+    ] + [
     {
-      name: 'mattermost test',
-      image: 'syncloud/platform-buster-' + arch + ':' + platform,
+      name: 'mattermost test ' + distro,
+      image: 'syncloud/platform-' + distro + '-' + arch + ':' + platforms[distro],
       commands: [
         './mattermost/test.sh',
       ],
-    },
+    }
+    for distro in distros
+    ] + [
    
     {
       name: 'package',
@@ -117,7 +123,7 @@ local build(arch, test_ui) = [{
                 },
                 {
                   name: 'selenium-video',
-                  image: 'selenium/video:ffmpeg-6.1.1-20240621',
+                  image: 'selenium/video:ffmpeg-8.0-20251212',
                   detach: true,
                   environment: {
                     DISPLAY_CONTAINER_NAME: 'selenium',
@@ -250,7 +256,7 @@ local build(arch, test_ui) = [{
   services: [
     {
       name: name + '.' + distro + '.com',
-      image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
+      image: 'syncloud/platform-' + distro + '-' + arch + ':' + platforms[distro],
       privileged: true,
       volumes: [
         {
