@@ -41,7 +41,7 @@ apps:
     command: bin/cli restore-post-start
 
 confinement: strict
-description: Paperless
+description: Online chat service with file sharing, search, and third party application integrations
 grade: stable
 name: mattermost
-summary: mattermost
+summary: Mattermost
