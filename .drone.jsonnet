@@ -9,7 +9,7 @@ local platforms = {
 };
 local selenium = '4.35.0-20250828';
 local store_publisher = 'stable-346';
-local mattermost = '11.5.1-syncloud';
+local mattermost = '11.10.0-syncloud';
 local python = '3.12-slim-bookworm';
 local distro_default = 'bookworm';
 local distros = ['bookworm'];
