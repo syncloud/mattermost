@@ -57,9 +57,14 @@ export async function completeOnboarding(page: Page) {
 }
 
 export async function dismissModals(page: Page) {
+  const modal = page.locator('#genericModal')
+  for (let i = 0; i < 3; i++) {
+    if (!(await clickIfVisible(modal.locator('button.close'), 5_000))) {
+      break
+    }
+    await expect(modal).toBeHidden()
+  }
   await clickIfVisible(page.locator('[data-cy="onboarding-task-list-overlay"]'), 5_000)
-  await clickIfVisible(page.getByRole('button', { name: 'No thanks' }), 5_000)
-  await clickIfVisible(page.locator('button.close').first(), 5_000)
 }
 
 export async function waitChat(page: Page) {
