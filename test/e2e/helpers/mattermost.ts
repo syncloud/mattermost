@@ -1,8 +1,8 @@
 import { Locator, Page, expect } from '@playwright/test'
 
-const OPTIONAL_TIMEOUT = 20_000
+const ORGANIZATION = 'testorg'
 
-async function clickIfVisible(locator: Locator, timeout = OPTIONAL_TIMEOUT): Promise<boolean> {
+async function clickIfVisible(locator: Locator, timeout: number): Promise<boolean> {
   try {
     await locator.waitFor({ state: 'visible', timeout })
   } catch {
@@ -18,58 +18,57 @@ export async function waitLoaded(page: Page) {
 
 export async function viewInBrowser(page: Page) {
   await waitLoaded(page)
-  await clickIfVisible(page.getByText('View in Browser').first())
+  await clickIfVisible(page.getByText('View in Browser'), 30_000)
   await waitLoaded(page)
 }
 
 export async function loginLdap(page: Page, user: string, password: string) {
-  const ldap = page.getByText(/AD\/LDAP Credential|LDAP Credential/).first()
+  const ldap = page.getByText(/AD\/LDAP Credential/)
   await ldap.scrollIntoViewIfNeeded()
   await ldap.click()
   await waitLoaded(page)
 
   await page.locator('#input_loginId').fill(user)
   await page.locator('#input_password-input').fill(password)
-  await page.getByText('Log in', { exact: true }).first().click()
+  await page.locator('[data-testid="saveSetting"]').click()
 }
 
 export async function completeOnboarding(page: Page) {
-  const org = page.locator('input[placeholder="Organization name"]')
-  if (await clickIfVisible(org)) {
-    await org.fill('testorg')
-    await page.getByText('Continue', { exact: true }).first().click()
+  const organization = page.locator('[data-testid="continue"]')
+  const composer = page.locator('[data-testid="post_textbox"]')
+  await expect(organization.or(composer).first()).toBeVisible()
+
+  if (!(await organization.isVisible())) {
+    return
   }
 
-  const tools = page.getByText('What tools do you use?').first()
-  try {
-    await tools.waitFor({ state: 'visible', timeout: OPTIONAL_TIMEOUT })
-    await page
-      .locator('xpath=//span[.="What tools do you use?"]/../..//span[.="Continue"]')
-      .click()
-    await expect(tools).toBeHidden()
-  } catch {}
+  await page.locator('input.Organization__input').fill(ORGANIZATION)
+  await organization.click()
 
-  const invite = page.getByText('Invite your team members').first()
-  try {
-    await invite.waitFor({ state: 'visible', timeout: OPTIONAL_TIMEOUT })
-    await page.getByText('Finish setup', { exact: true }).first().click()
+  const plugins = page.locator('.Plugins-body')
+  if (await clickIfVisible(plugins.getByRole('button', { name: 'Continue' }), 60_000)) {
+    await expect(plugins).toBeHidden()
+  }
+
+  const invite = page.locator('.InviteMembers__submit')
+  if (await clickIfVisible(invite.getByRole('button', { name: 'Finish setup' }), 60_000)) {
     await expect(invite).toBeHidden()
-  } catch {}
+  }
 }
 
 export async function dismissModals(page: Page) {
-  await clickIfVisible(page.getByText('No thanks', { exact: true }).first(), 5_000)
+  await clickIfVisible(page.getByRole('button', { name: 'No thanks' }), 5_000)
   await clickIfVisible(page.locator('button.close').first(), 5_000)
 }
 
 export async function waitChat(page: Page) {
-  await expect(page.locator('#post_textbox')).toBeVisible()
+  await expect(page.locator('[data-testid="post_textbox"]')).toBeVisible()
   await dismissModals(page)
 }
 
 export async function postMessage(page: Page, text: string) {
   await dismissModals(page)
-  await page.locator('#post_textbox').fill(text)
+  await page.locator('[data-testid="post_textbox"]').fill(text)
   await page.locator('[data-testid="SendMessageButton"]').click()
 }
 
