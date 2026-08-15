@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { test } from '../helpers/fixtures'
 import { shoot } from '../helpers/screenshot'
 import { env } from '../helpers/env'
 import { login, postMessage, expectMessage } from '../helpers/mattermost'

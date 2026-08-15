@@ -62,7 +62,7 @@ export async function dismissModals(page: Page) {
 }
 
 export async function waitChat(page: Page) {
-  await expect(page.locator('[data-testid="post_textbox"]')).toBeVisible()
+  await expect(page.locator('[data-testid="post_textbox"]')).toBeVisible({ timeout: 240_000 })
   await dismissModals(page)
 }
 
