@@ -23,6 +23,8 @@ def module_setup(request, device, artifact_dir):
 def test_start(module_setup, app, device_host, domain, device):
     add_host_alias(app, device_host, domain)
     device.activated()
+    device.run_ssh('snap set system refresh.hold=forever', throw=False)
+    device.run_ssh('snap abort --last=auto-refresh', throw=False)
     device.run_ssh('rm -rf {0}'.format(TMP_DIR), throw=False)
     device.run_ssh('mkdir {0}'.format(TMP_DIR), throw=False)
 
