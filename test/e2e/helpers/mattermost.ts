@@ -68,7 +68,13 @@ export async function dismissModals(page: Page) {
 }
 
 export async function waitChat(page: Page) {
-  await expect(page.locator('[data-testid="post_textbox"]')).toBeVisible({ timeout: 240_000 })
+  const composer = page.locator('[data-testid="post_textbox"]')
+  try {
+    await expect(composer).toBeVisible({ timeout: 120_000 })
+  } catch {
+    await page.goto('/')
+    await expect(composer).toBeVisible({ timeout: 120_000 })
+  }
   await dismissModals(page)
 }
 
