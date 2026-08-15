@@ -57,6 +57,7 @@ export async function completeOnboarding(page: Page) {
 }
 
 export async function dismissModals(page: Page) {
+  await clickIfVisible(page.locator('[data-cy="onboarding-task-list-overlay"]'), 5_000)
   await clickIfVisible(page.getByRole('button', { name: 'No thanks' }), 5_000)
   await clickIfVisible(page.locator('button.close').first(), 5_000)
 }
@@ -69,6 +70,7 @@ export async function waitChat(page: Page) {
 export async function postMessage(page: Page, text: string) {
   await dismissModals(page)
   await page.locator('[data-testid="post_textbox"]').fill(text)
+  await dismissModals(page)
   await page.locator('[data-testid="SendMessageButton"]').click()
 }
 
