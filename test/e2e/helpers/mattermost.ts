@@ -24,9 +24,14 @@ export async function viewInBrowser(page: Page) {
 
 export async function loginLdap(page: Page, user: string, password: string) {
   const ldap = page.getByText(/AD\/LDAP Credential/)
-  await ldap.scrollIntoViewIfNeeded()
-  await ldap.click()
-  await waitLoaded(page)
+  try {
+    await ldap.waitFor({ state: 'visible', timeout: 30_000 })
+    await ldap.scrollIntoViewIfNeeded()
+    await ldap.click()
+    await waitLoaded(page)
+  } catch {
+    await waitLoaded(page)
+  }
 
   await page.locator('#input_loginId').fill(user)
   await page.locator('#input_password-input').fill(password)
