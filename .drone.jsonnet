@@ -23,13 +23,6 @@ local build(arch, test_ui) = [{
   },
   steps: [
     {
-      name: 'version',
-      image: 'debian:' + debian,
-      commands: [
-        'echo $DRONE_BUILD_NUMBER > version',
-      ],
-    },
-    {
       name: 'cli',
       image: 'golang:' + golang,
       commands: [
@@ -73,7 +66,7 @@ local build(arch, test_ui) = [{
       name: 'package',
       image: 'debian:' + debian,
       commands: [
-        './ci/package.sh ' + name,
+        './package.sh ' + name + ' $DRONE_BUILD_NUMBER',
       ],
     },
   ] + [
