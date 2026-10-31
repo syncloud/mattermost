@@ -80,6 +80,29 @@ def test_visible_through_platform(app_domain):
     assert response.status_code == 200, response.text
 
 
+def test_client_config_openid_only(app_domain):
+    response = requests.get('https://{0}/api/v4/config/client?format=old'.format(app_domain), verify=False)
+    assert response.status_code == 200, response.text
+    config = response.json()
+    assert config['EnableSignUpWithOpenId'] == 'true'
+    assert config['OpenIdButtonText'] == 'Syncloud'
+    assert config['EnableSignInWithEmail'] == 'false'
+    assert config['EnableSignInWithUsername'] == 'false'
+    assert config['EnableLdap'] == 'false'
+    assert config['EnableUserCreation'] == 'true'
+    assert config['EnableSignUpWithEmail'] == 'false'
+
+
+@pytest.mark.parametrize('path', ['login', 'mobile_login'])
+def test_openid_login_redirects_to_authelia(app_domain, domain, path):
+    response = requests.get('https://{0}/oauth/openid/{1}'.format(app_domain, path), verify=False, allow_redirects=False)
+    assert response.status_code == 302, response.text
+    location = response.headers['Location']
+    assert location.startswith('https://auth.{0}/api/oidc/authorization?'.format(domain)), location
+    assert 'client_id=mattermost' in location, location
+    assert 'redirect_uri=https%3A%2F%2F{0}%2Fsignup%2Fopenid%2Fcomplete'.format(app_domain) in location, location
+
+
 def test_storage_change(device):
     device.run_ssh('snap run mattermost.storage-change > {0}/storage-change.log'.format(TMP_DIR))
 
