@@ -1,4 +1,5 @@
 import { Locator, Page, expect } from '@playwright/test'
+import { CurrentUser } from './current_user'
 
 const ORGANIZATION = 'testorg'
 
@@ -95,10 +96,37 @@ export async function expectMessage(page: Page, text: string) {
   await expect(page.locator('.post-message__text', { hasText: text }).first()).toBeVisible()
 }
 
+export async function signInAuthelia(page: Page, user: string, password: string) {
+  await page.locator('#username-textfield').fill(user)
+  await page.locator('#password-textfield').fill(password)
+  await page.locator('#sign-in-button').click()
+}
+
+export async function openLogin(page: Page): Promise<Locator> {
+  await page.goto('/')
+  await viewInBrowser(page)
+  const sso = page.getByTestId('openid')
+  await expect(sso).toBeVisible({ timeout: 60_000 })
+  return sso
+}
+
 export async function login(page: Page, user: string, password: string) {
+  await (await openLogin(page)).click()
+  await signInAuthelia(page, user, password)
+  await completeOnboarding(page)
+  await waitChat(page)
+}
+
+export async function loginWithLdap(page: Page, user: string, password: string) {
   await page.goto('/')
   await viewInBrowser(page)
   await loginLdap(page, user, password)
   await completeOnboarding(page)
   await waitChat(page)
+}
+
+export async function currentUser(page: Page): Promise<CurrentUser> {
+  const response = await page.request.get('/api/v4/users/me')
+  expect(response.status()).toBe(200)
+  return (await response.json()) as CurrentUser
 }

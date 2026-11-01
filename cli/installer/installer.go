@@ -25,7 +25,8 @@ type Variables struct {
 	AppDir      string
 	CommonDir   string
 	Url         string
-	OIDCConfig  string
+	AuthUrl     string
+	OIDCSecret  string
 	App         string
 }
 
@@ -270,12 +271,7 @@ func (i *Installer) UpdateConfigs() error {
 		return err
 	}
 
-	password, err := i.platformClient.RegisterOIDCClient(App, "/accounts/oidc/authelia/login/callback/", false, "client_secret_basic")
-	if err != nil {
-		return err
-	}
-
-	oidcConfig, err := OpenIDConfig(authUrl, App, password)
+	oidcSecret, err := i.platformClient.RegisterOIDCClient(App, "/signup/openid/complete", false, "client_secret_post")
 	if err != nil {
 		return err
 	}
@@ -288,7 +284,8 @@ func (i *Installer) UpdateConfigs() error {
 		AppDir:      i.appDir,
 		CommonDir:   i.commonDir,
 		Url:         url,
-		OIDCConfig:  oidcConfig,
+		AuthUrl:     authUrl,
+		OIDCSecret:  oidcSecret,
 		App:         App,
 	}
 
