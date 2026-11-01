@@ -9,7 +9,7 @@ const preMessage = 'pre upgrade message'
 const postMessageText = 'post upgrade message'
 
 test.describe('mattermost post-upgrade', () => {
-  test('ldap account is taken over by syncloud sign in', async ({ page }, testInfo) => {
+  test('syncloud account and messages survive the upgrade', async ({ page }, testInfo) => {
     await login(page, user, password)
     await shoot(page, testInfo, 'post-upgrade-chat')
     const me = await currentUser(page)
