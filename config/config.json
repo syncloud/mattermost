@@ -576,19 +576,12 @@
         "EnableHealthCheck": true,
         "Directory": "{{ .DataDir }}/plugins",
         "ClientDirectory": "{{ .DataDir }}/client/plugins",
-        "Plugins": {
-            "playbooks": {
-                "BotUserID": "w1a4u9nuwjr53c96iefg5ofsmr"
-            }
-        },
+        "Plugins": {},
         "PluginStates": {
             "com.mattermost.calls": {
                 "Enable": true
             },
             "com.mattermost.nps": {
-                "Enable": true
-            },
-            "playbooks": {
                 "Enable": true
             }
         },

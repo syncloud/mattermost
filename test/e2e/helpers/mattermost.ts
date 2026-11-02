@@ -1,7 +1,10 @@
 import { Locator, Page, expect } from '@playwright/test'
 import { CurrentUser } from './current_user'
+import { InstallPluginRequest } from './install_plugin_request'
+import { PluginStatus } from './plugin_status'
 
 const ORGANIZATION = 'testorg'
+const PLUGIN_RUNNING = 2
 
 async function clickIfVisible(locator: Locator, timeout: number): Promise<boolean> {
   try {
@@ -21,22 +24,6 @@ export async function viewInBrowser(page: Page) {
   await waitLoaded(page)
   await clickIfVisible(page.getByText('View in Browser'), 30_000)
   await waitLoaded(page)
-}
-
-export async function loginLdap(page: Page, user: string, password: string) {
-  const ldap = page.getByText(/AD\/LDAP Credential/)
-  try {
-    await ldap.waitFor({ state: 'visible', timeout: 30_000 })
-    await ldap.scrollIntoViewIfNeeded()
-    await ldap.click()
-    await waitLoaded(page)
-  } catch {
-    await waitLoaded(page)
-  }
-
-  await page.locator('#input_loginId').fill(user)
-  await page.locator('#input_password-input').fill(password)
-  await page.locator('[data-testid="saveSetting"]').click()
 }
 
 export async function completeOnboarding(page: Page) {
@@ -117,16 +104,35 @@ export async function login(page: Page, user: string, password: string) {
   await waitChat(page)
 }
 
-export async function loginWithLdap(page: Page, user: string, password: string) {
-  await page.goto('/')
-  await viewInBrowser(page)
-  await loginLdap(page, user, password)
-  await completeOnboarding(page)
-  await waitChat(page)
-}
-
 export async function currentUser(page: Page): Promise<CurrentUser> {
   const response = await page.request.get('/api/v4/users/me')
   expect(response.status()).toBe(200)
   return (await response.json()) as CurrentUser
+}
+
+async function csrfHeaders(page: Page): Promise<Record<string, string>> {
+  const cookies = await page.context().cookies()
+  const csrf = cookies.find((cookie) => cookie.name === 'MMCSRF')
+  expect(csrf).toBeDefined()
+  return { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-Token': csrf!.value }
+}
+
+export async function installMarketplacePlugin(page: Page, id: string) {
+  const headers = await csrfHeaders(page)
+  const request: InstallPluginRequest = { id }
+  const install = await page.request.post('/api/v4/plugins/marketplace', { headers, data: request, timeout: 300_000 })
+  expect(install.status(), await install.text()).toBe(201)
+  const enable = await page.request.post(`/api/v4/plugins/${id}/enable`, { headers })
+  expect(enable.status(), await enable.text()).toBe(200)
+}
+
+export async function pluginState(page: Page, id: string): Promise<number | undefined> {
+  const response = await page.request.get('/api/v4/plugins/statuses')
+  expect(response.status()).toBe(200)
+  const statuses = (await response.json()) as PluginStatus[]
+  return statuses.find((status) => status.plugin_id === id)?.state
+}
+
+export async function expectPluginRunning(page: Page, id: string) {
+  await expect.poll(() => pluginState(page, id), { timeout: 300_000, intervals: [5_000] }).toBe(PLUGIN_RUNNING)
 }

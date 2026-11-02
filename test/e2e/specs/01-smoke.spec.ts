@@ -1,7 +1,7 @@
 import { test, expect } from '../helpers/fixtures'
 import { shoot } from '../helpers/screenshot'
 import { env } from '../helpers/env'
-import { login, openLogin, currentUser, postMessage, expectMessage } from '../helpers/mattermost'
+import { login, openLogin, currentUser, postMessage, expectMessage, installMarketplacePlugin, expectPluginRunning } from '../helpers/mattermost'
 
 const user = env('PLAYWRIGHT_DEVICE_USER')
 const password = env('PLAYWRIGHT_DEVICE_PASSWORD')
@@ -29,5 +29,18 @@ test.describe('mattermost smoke', () => {
     expect(me.username).toBe(user)
     expect(me.auth_service).toBe('openid')
     expect(me.roles.split(' ')).toContain('system_admin')
+  })
+
+  test('bundled calls and agents plugins are running', async ({ page }) => {
+    await login(page, user, password)
+    await expectPluginRunning(page, 'com.mattermost.calls')
+    await expectPluginRunning(page, 'mattermost-ai')
+  })
+
+  test('admin installs a plugin from the marketplace', async ({ page }) => {
+    test.setTimeout(900_000)
+    await login(page, user, password)
+    await installMarketplacePlugin(page, 'jira')
+    await expectPluginRunning(page, 'jira')
   })
 })
